@@ -407,6 +407,48 @@ h3 {
   font-size: 0.95rem;
 }
 
+.talk-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.talk-actions a {
+  font-size: 0.9rem;
+}
+
+.talk-actions .review-ready {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 7px 11px;
+  border-radius: 8px;
+  color: #fffefa;
+  background: var(--leaf);
+}
+
+.talk-actions .review-ready:hover {
+  background: var(--leaf-dark);
+  text-decoration: none;
+}
+
+.review-pending {
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-style: italic;
+}
+
+.gallery-cta {
+  color: #fffefa;
+  background: var(--leaf);
+}
+
+.gallery-cta:hover {
+  background: var(--leaf-dark);
+}
+
 .boundary-callout {
   color: #fffefa;
   background: var(--leaf-dark);
