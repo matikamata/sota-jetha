@@ -1,0 +1,2232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sota Review Preview</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F1E9D8;
+    --card:#FAF6EA;
+    --paper-2:#E7DCC4;
+    --paper-3:#DED0B3;
+    --ink:#2B2418;
+    --ink-soft:#6C5E45;
+    --ink-faint:#9A8A6B;
+    --honey:#C2811A;
+    --honey-deep:#9E660F;
+    --honey-soft:#F0DBAC;
+    --sage:#5C6A4D;
+    --sage-deep:#4A5640;
+    --sage-soft:#DCE0CF;
+    --line:#D6C8AB;
+    --line-soft:#E2D6BC;
+    --danger:#9a3a2a;
+    --danger-soft:#f4d7d0;
+    --blue:#4a7087;
+    --blue-soft:#dce9ee;
+    --radius:8px;
+    --shadow:0 1px 0 rgba(43,36,24,.05),0 10px 28px -18px rgba(43,36,24,.4);
+    --body-left:280px;
+    --col-left:222px;
+    --col-act:150px;
+    --gap:26px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"IBM Plex Sans",Inter,system-ui,-apple-system,sans-serif;
+    font-size:15px;
+    line-height:1.5;
+  }
+  h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:500;letter-spacing:0;margin:0}
+  button,input,textarea{font:inherit}
+  button{cursor:pointer}
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 22px 78px}
+  header{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:24px}
+  .mark{font-family:Fraunces,Georgia,serif;font-size:30px;font-weight:600;line-height:1}
+  .badge-top{display:inline-flex;align-items:center;border:1px solid var(--blue);background:var(--blue-soft);color:#294a5b;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.02em;padding:4px 10px;text-transform:uppercase}
+  .tagline{color:var(--ink-soft);font-size:14px;max-width:68ch}
+  .setup,.panel{background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .setup{max-width:820px;padding:24px}
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+  .fieldnote{margin:6px 0 0;color:var(--ink-soft);font-size:12.5px;font-style:italic}
+  input[type=text],textarea{
+    width:100%;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink);
+    border-radius:var(--radius);
+    padding:10px 11px;
+  }
+  textarea{resize:vertical;min-height:78px}
+  :focus-visible{outline:2px solid var(--honey);outline-offset:2px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--honey);color:#fff;border:0;border-radius:var(--radius);padding:10px 15px;font-weight:700}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+  .btn.small{font-size:12.5px;padding:6px 10px}
+  .notice{background:#fff;border:1px solid var(--honey);border-left:4px solid var(--honey);border-radius:var(--radius);font-size:13px;margin:14px 0;padding:10px 12px}
+  .sample-gallery{display:grid;gap:14px;margin-top:18px}
+  .gallery-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .gallery-card{display:flex;flex-direction:column;gap:8px;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px 15px;box-shadow:var(--shadow)}
+  .gallery-card h3{font-family:Fraunces,Georgia,serif;font-size:20px;margin:0}
+  .gallery-card p{margin:0;color:var(--ink-soft);font-size:13px}
+  .gallery-status{display:inline-flex;width:max-content;max-width:100%;border:1px solid var(--sage);background:var(--sage-soft);color:#344f2f;border-radius:999px;font-size:12px;font-weight:700;padding:2px 8px}
+  .gallery-status.pending{border-color:var(--line);background:var(--paper-2);color:var(--ink-soft)}
+  .gallery-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:auto;padding-top:6px}
+  .gallery-actions a{color:var(--blue);font-size:12.5px;font-weight:700;text-decoration:none}
+  .gallery-actions a:hover{text-decoration:underline}
+  .gallery-actions a.btn{color:#fff;text-decoration:none}
+  .gallery-actions a.btn:hover{text-decoration:none}
+  .gallery-pending{color:var(--ink-soft);font-size:12.5px;font-style:italic}
+  .demo-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin:16px 0;box-shadow:var(--shadow)}
+  .demo-card .demo-label{display:inline-flex;align-items:center;border:1px solid var(--blue);background:var(--blue-soft);color:#294a5b;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.02em;padding:3px 9px;text-transform:uppercase}
+  .demo-card h3{margin:8px 0 4px;font-family:Fraunces,Georgia,serif;font-size:22px}
+  .demo-card p{margin:0;color:var(--ink-soft);font-size:13px}
+  .advanced-options{border:1px solid var(--line);border-radius:var(--radius);background:rgba(255,252,245,.54);padding:0;margin:14px 0 16px}
+  .advanced-options summary{cursor:pointer;color:var(--blue);font-size:13px;font-weight:700;padding:11px 12px;list-style:none}
+  .advanced-options summary::-webkit-details-marker{display:none}
+  .advanced-options summary::after{content:"show";float:right;color:var(--ink-soft);font-weight:700}
+  .advanced-options[open] summary::after{content:"hide"}
+  .advanced-body{padding:0 12px 12px}
+  .advanced-body .field:last-child{margin-bottom:0}
+  .err{color:var(--danger);font-weight:600;font-size:13px;margin-top:10px;min-height:1.2em}
+  .msg{color:var(--ink-soft);font-size:13px;margin-top:10px;min-height:1.2em}
+  .stage-list{display:grid;gap:7px;margin:16px 0}
+  .stage{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:8px 10px;font-size:13px}
+  .stage b{text-transform:capitalize}
+  .stage span:last-child{color:var(--ink-soft);text-align:right}
+  .stage.pass{border-color:var(--sage);background:var(--sage-soft)}
+  .stage.fail{border-color:var(--danger);background:var(--danger-soft);color:var(--danger)}
+  .editor{display:none}
+
+  /* head: candidate chip + title + talk-meta + nav, dock toggle */
+  .head{padding:4px 0 4px;display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  .candidate-chip{display:inline-flex;align-items:center;gap:7px;font-family:"IBM Plex Sans",sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.05em;color:var(--honey-deep);margin-bottom:10px}
+  .candidate-chip .d{width:8px;height:8px;border-radius:50%;background:var(--honey);box-shadow:0 0 0 3px var(--honey-soft)}
+  .head h1{font-size:clamp(1.5rem,3vw,2rem);line-height:1.1;margin:0}
+  .talk-meta{font-family:"IBM Plex Sans",sans-serif;font-size:13.5px;color:var(--ink-faint);margin-top:8px}
+  .talk-meta .flagged{color:var(--honey-deep);font-weight:600}
+  .talk-nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+  .dock{flex:0 0 auto}
+  .dock-label{font-family:"IBM Plex Sans",sans-serif;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:7px;text-align:right}
+  .seg{display:inline-flex;background:var(--paper-2);border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px}
+  .seg button{appearance:none;background:transparent;border:0;font-size:12.5px;font-weight:500;color:var(--ink-soft);cursor:pointer;padding:6px 12px;border-radius:999px;transition:background .15s,color .15s}
+  .seg button[aria-pressed=true]{background:var(--honey);color:#fff;font-weight:600}
+
+  /* body: left rail (video anchor + gauge + evidence link) | right (reviewer/download/insight) */
+  .body{display:grid;grid-template-columns:var(--body-left) minmax(0,1fr);column-gap:var(--gap);align-items:start;margin:18px 0 8px}
+  .b-left{display:flex;flex-direction:column;gap:14px}
+  .b-right{display:flex;flex-direction:column;gap:16px;min-width:0}
+  .rail-card{background:var(--card);border:1px solid var(--line-soft);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+  .gauge{display:flex;gap:14px;align-items:stretch}
+  .gauge-track{position:relative;width:9px;min-height:108px;background:var(--paper-3);border-radius:999px;overflow:hidden;flex:0 0 auto}
+  .gauge-fill{position:absolute;left:0;right:0;bottom:0;height:0%;background:var(--sage);border-radius:999px;transition:height .45s ease}
+  .gauge-meta{display:flex;flex-direction:column;justify-content:space-between}
+  .gauge-meta .lab{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint)}
+  .gauge-meta .count{font-family:Fraunces,Georgia,serif;font-size:1.7rem;line-height:1}
+  .gauge-meta .count b{font-weight:500}
+  .gauge-meta .sub{font-family:Newsreader,Georgia,serif;font-size:12.5px;color:var(--ink-faint);line-height:1.35}
+  .ev-line{display:flex;align-items:center;justify-content:space-between;gap:8px;font-family:Newsreader,Georgia,serif;font-size:13px;color:var(--ink-soft)}
+  .link-btn{background:none;border:none;color:var(--honey-deep);font-size:13px;font-weight:600;cursor:pointer;padding:0}
+  .playback-warning{display:none;background:var(--danger-soft);border:1px solid var(--danger);border-radius:var(--radius);color:var(--danger);font-size:13px;padding:9px 10px}
+  .playback-warning.show{display:block}
+
+  .ctl-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .panel{background:var(--card);border:1px solid var(--line-soft);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+  .download-row{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-top:10px}
+
+  /* insight capture — expanded by default, collapsible */
+  .insight-panel{background:var(--card);border:1px solid var(--line-soft);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;padding:0}
+  .insight-panel summary{display:flex;align-items:center;gap:12px;cursor:pointer;padding:16px 18px;list-style:none}
+  .insight-panel summary::-webkit-details-marker{display:none}
+  .insight-panel summary .chev{color:var(--ink-faint);transition:transform .2s;font-size:14px}
+  .insight-panel[open] summary .chev{transform:rotate(90deg)}
+  .insight-panel h2{font-size:1.15rem;margin:0}
+  .insight-label{display:inline-flex;margin-left:auto;border:1px solid #CDD4BD;border-radius:999px;color:var(--sage-deep);background:var(--sage-soft);padding:3px 10px;font-size:11px;font-weight:600}
+  .insight-body{padding:0 18px 18px}
+  .insight-tools{display:grid;gap:12px;margin-top:10px}
+  .entry-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:start}
+  .entry-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+  .entry-chip{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:3px 9px;font-size:12.5px;max-width:100%;overflow-wrap:anywhere}
+  .entry-text{white-space:pre-wrap;background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:7px 9px;font-size:12.5px;margin-top:6px}
+
+  .cues-label{font-family:"IBM Plex Sans",sans-serif;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);margin:18px 0 14px}
+  .cues{display:flex;flex-direction:column;gap:12px;margin-top:0}
+
+  /* full-width cue: toggles | wide text | play+check */
+  .cue{display:grid;grid-template-columns:var(--col-left) minmax(0,1fr) var(--col-act);column-gap:var(--gap);align-items:start;background:var(--card);border:1px solid var(--line-soft);border-radius:var(--radius);padding:16px 18px;box-shadow:0 1px 5px var(--shadow);transition:border-color .15s,box-shadow .15s}
+  .cue:hover{border-color:var(--line)}
+  .cue.active{border-color:var(--honey);box-shadow:0 0 0 1px rgba(184,116,42,.5)}
+  .cue.playing{background:#fff9ee;border-color:var(--honey)}
+  .cue.checked{background:#F0F2E6;border-color:#CFD7BE}
+  .cue.flagged{border-left:3px solid var(--honey)}
+  .cue.proposed-removal{border-left:3px solid var(--danger)}
+
+  .z-toggles{display:flex;flex-direction:column;gap:8px;min-width:0}
+  .z-toggles summary{cursor:pointer;font-family:"IBM Plex Sans",sans-serif;font-size:13.5px;font-weight:600;padding:4px 0;display:flex;align-items:center;gap:6px;list-style:none}
+  .z-toggles summary::-webkit-details-marker{display:none}
+  .z-toggles summary .chev{transition:transform .2s;font-size:11px;display:inline-block}
+  .z-toggles details[open]>summary .chev{transform:rotate(90deg)}
+  .remove-panel summary{color:var(--honey-deep)}
+  .cue-insight summary{color:var(--sage-deep)}
+  .remove-tools,.insight-tools{background:var(--paper);border:1px solid var(--line-soft);border-radius:9px;padding:13px;margin-bottom:4px}
+  .cue-insight .insight-tools{background:var(--paper);border:1px solid var(--line-soft)}
+  .remove-tools select,.remove-tools textarea,.insight-tools input,.insight-tools textarea{width:100%;font-family:Newsreader,Georgia,serif;font-size:14px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:9px;padding:8px 10px;margin-bottom:9px;resize:vertical}
+  .remove-tools select:focus,.remove-tools textarea:focus,.insight-tools input:focus,.insight-tools textarea:focus{outline:2px solid var(--honey);border-color:var(--honey)}
+  .remove-state{font-size:12.5px;color:var(--danger);font-weight:700}
+  .remove-warning{font-size:12.5px;color:var(--danger);background:rgba(255,255,255,.62);border:1px solid rgba(178,60,44,.36);border-radius:6px;padding:8px 9px}
+  .original-text{white-space:pre-wrap;background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:7px 9px;font-size:12.5px}
+
+  .z-text{min-width:0}
+  .cue-top{display:flex;align-items:center;gap:12px;margin-bottom:11px;flex-wrap:wrap}
+  .cue-no{font-family:"IBM Plex Sans",sans-serif;font-size:12px;font-weight:600;color:var(--ink-faint);background:var(--paper-2);border:1px solid var(--line);border-radius:7px;padding:3px 9px;letter-spacing:.02em;font-variant-numeric:tabular-nums}
+  .cue-time{font-family:"IBM Plex Sans",sans-serif;font-size:15px;font-weight:500;color:var(--ink-soft);font-variant-numeric:tabular-nums;background:none;border:0;padding:0;cursor:pointer}
+  .cue-flag{display:inline-flex;align-items:center;gap:6px;font-family:"IBM Plex Sans",sans-serif;font-size:12px;color:var(--honey-deep)}
+  .cue-flag .fd{width:8px;height:8px;border-radius:50%;background:var(--honey)}
+  .txt{font-family:Newsreader,Georgia,serif;font-size:1.3rem;line-height:1.5;min-height:1.5em;color:var(--ink);outline:0;white-space:pre-wrap;border-radius:5px;padding:2px 4px;margin:-2px -4px}
+  .txt:focus{background:#fff;box-shadow:0 0 0 2px var(--honey-soft)}
+  .txt.readonly-removal{background:rgba(178,60,44,.06);color:var(--ink-soft);cursor:not-allowed}
+  .cue-why{font-family:Newsreader,Georgia,serif;font-size:13.5px;color:var(--ink-soft);margin:9px 0 0}
+
+  .z-actions{display:flex;flex-direction:column;gap:10px}
+  .cue-play{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--paper);color:var(--ink-soft);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:12px;transition:border-color .15s,color .15s;align-self:center}
+  .cue-play:hover{border-color:var(--honey);color:var(--honey-deep)}
+  .cue-play.playing{border-color:var(--honey);color:var(--honey);background:#fff}
+  .cue-play:disabled{opacity:.42;cursor:not-allowed}
+  .check{width:100%;font-size:13px;font-weight:600;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:9px 12px;cursor:pointer;transition:all .15s}
+  .check:hover{border-color:var(--sage)}
+  .cue.checked .check{background:var(--sage);border-color:var(--sage);color:#fff}
+
+  .clearance{height:0;transition:height .2s}
+
+  .prov-strip{background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin-top:8px}
+  .prov-strip h4{font-family:"IBM Plex Sans",sans-serif;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 10px}
+  .labels{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+  .pill{display:inline-flex;align-items:center;font-family:"IBM Plex Sans",sans-serif;font-size:12px;color:var(--ink-soft);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-weight:600}
+  .pill.strong{color:var(--honey-deep);border-color:var(--honey);background:var(--honey-soft)}
+  .hash-grid{display:flex;flex-wrap:wrap;gap:10px}
+  .hash-grid div{font-family:"IBM Plex Sans",sans-serif;font-size:12px;color:var(--ink-faint);background:var(--card);border:1px solid var(--line-soft);border-radius:9px;padding:6px 11px;overflow-wrap:anywhere}
+
+  .bench-footer{padding:26px 0 10px;margin-top:8px;border-top:1px solid var(--line);font-family:"IBM Plex Sans",sans-serif;font-size:13px;color:var(--ink-faint)}
+  .bench-footer .sadhu{font-family:Fraunces,Georgia,serif;font-style:italic;color:var(--ink-soft);font-size:16px;margin-bottom:10px}
+  .bench-footer .foot-note{max-width:78ch;margin:0;line-height:1.55}
+
+  /* floating video: draggable + resizable, real iframe lives inside .player-shell */
+  .floatv{position:fixed;z-index:60;background:#1c160d;border:1px solid #2a2114;border-radius:12px;box-shadow:0 12px 34px rgba(43,36,24,.32);overflow:hidden}
+  .fv-bar{display:flex;align-items:center;gap:8px;padding:7px 10px;background:rgba(255,255,255,.06);cursor:grab;touch-action:none}
+  .fv-bar.grabbing{cursor:grabbing}
+  .fv-bar .grip{color:var(--paper-3);font-size:13px;letter-spacing:1px}
+  .fv-bar .ttl{color:var(--paper);font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+  .fv-bar .x{margin-left:auto;background:none;border:none;color:var(--paper-3);font-size:15px;cursor:pointer;line-height:1;padding:2px 4px}
+  .fv-bar .x:hover{color:#fff}
+  .player-shell{background:#111;border-radius:0;overflow:hidden;aspect-ratio:16/9;color:#eadfcd;display:flex;align-items:center;justify-content:center;text-align:center;position:relative}
+  #player{width:100%;height:100%;min-width:200px;min-height:200px}
+  #player iframe{width:100%;height:100%}
+  .fv-resize{position:absolute;right:3px;bottom:3px;width:18px;height:18px;cursor:nwse-resize;z-index:3;display:flex;align-items:flex-end;justify-content:flex-end}
+  .fv-resize::after{content:"";width:9px;height:9px;border-right:2px solid rgba(239,231,212,.55);border-bottom:2px solid rgba(239,231,212,.55)}
+  .editor[data-dock=corner] .floatv{right:22px;bottom:22px;width:300px}
+  .editor[data-dock=inline] .floatv{left:28px;top:265px;width:230px}
+  .editor[data-dock=hidden] .floatv{position:fixed!important;left:-9999px;top:0;width:202px!important;opacity:0;pointer-events:none;box-shadow:none}
+  .editor[data-dock=hidden] .player-shell{aspect-ratio:auto;height:200px;min-height:200px}
+
+  .modal-backdrop{position:fixed;inset:0;z-index:200;background:rgba(43,38,32,.42);display:flex;align-items:center;justify-content:center;padding:22px}
+  .modal-backdrop[hidden]{display:none}
+  .modal{width:min(560px,100%);background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 20px 60px -24px rgba(43,38,32,.7);padding:22px}
+  .modal h2{font-size:24px;margin-bottom:10px}
+  .modal p{margin:0;white-space:pre-line;color:var(--ink-soft)}
+  .modal-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .modal.wide{width:min(720px,100%)}
+  .completion-flow{margin:16px 0 0;padding-left:22px;color:var(--ink-soft)}
+  .completion-flow li{margin:7px 0}
+  .completion-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}
+  .summary-card{background:var(--card);border:1px solid var(--line-soft);border-radius:var(--radius);padding:11px 12px}
+  .summary-card span{display:block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint)}
+  .summary-card b{display:block;font-family:Fraunces,Georgia,serif;font-size:22px;font-weight:500;margin-top:2px}
+  .future-submit{display:flex;flex-direction:column;gap:7px;background:var(--paper-2);border:1px dashed var(--line);border-radius:var(--radius);padding:12px;margin-top:14px}
+  .future-submit p{font-size:13px}
+  .float-nav{position:fixed;left:16px;bottom:16px;z-index:90;display:flex;flex-direction:column;gap:6px;background:rgba(251,248,240,.92);border:1px solid var(--line);border-radius:999px;padding:6px;box-shadow:0 12px 36px -20px rgba(43,38,32,.52)}
+  .float-nav[hidden]{display:none}
+  .float-nav button{appearance:none;border:1px solid transparent;background:transparent;color:var(--ink-soft);border-radius:999px;font-size:12px;font-weight:700;line-height:1;padding:8px 9px;min-width:58px}
+  .float-nav button:hover,.float-nav button:focus{background:var(--honey-soft);color:#754b19}
+  @media (max-width:920px){
+    .body{grid-template-columns:1fr;gap:16px}
+    .gauge{flex-direction:column;align-items:stretch;gap:10px}
+    .gauge-track{width:100%;min-height:0;height:9px;flex:0 0 auto}
+    .gauge-fill{top:0;bottom:0;left:0;right:auto;height:auto!important;width:0%;transition:width .45s ease}
+    .ctl-grid{grid-template-columns:1fr}
+    .head{flex-direction:column}
+    .dock-label{text-align:left}
+    .cue{grid-template-columns:1fr;gap:14px;padding:14px}
+    .z-actions{flex-direction:row}
+    .z-actions .check{flex:1}
+    .z-toggles{order:3}
+    .floatv{position:static!important;width:100%!important;box-shadow:none;margin-bottom:10px}
+  }
+  @media (max-width:700px){
+    .wrap{padding:20px 14px 72px}
+    .gallery-grid{grid-template-columns:1fr}
+    .entry-row{grid-template-columns:1fr}
+    .float-nav{left:10px;bottom:10px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="mark">Sota</div>
+    <div class="badge-top">Jetha review preview</div>
+    <div class="tagline">Exploratory review preview for curated public subtitle examples. Local candidate downloads are not delivered, reviewed, approved, published, canonical, or sealed.</div>
+  </header>
+
+  <section class="setup" id="setup">
+    <h2 id="setupTitle">Choose a review sample</h2>
+    <p class="msg" id="setupIntro">Select a public talk below. All eight selected public talks now have prepared subtitle review candidates.</p>
+    <div class="sample-gallery" id="sampleGallery" hidden>
+      <div class="gallery-grid" id="galleryCards"></div>
+    </div>
+    <div id="sampleSetupControls">
+      <div class="demo-card" id="demoCard">
+        <span class="demo-label">Selected review sample</span>
+        <h3 id="demoTitle">Love and kindness</h3>
+        <p id="demoChannel">@jethavanarama_eng</p>
+        <p id="demoDescription">A short opening sample about what we give and what returns to us.</p>
+      </div>
+      <details class="advanced-options" id="advancedOptions">
+        <summary aria-expanded="false">Advanced options</summary>
+        <div class="advanced-body">
+          <div class="field">
+            <label for="packRoot">Technical pack path</label>
+            <input type="text" id="packRoot" value="./internal-jetha-protected-preview-v1/" autocomplete="off">
+            <p class="fieldnote">Relative exploratory preview path only. No live project paths, APIs, or fallback sources are used.</p>
+          </div>
+          <div class="field">
+            <label for="requestedVideo">Selected talk identity</label>
+            <input type="text" id="requestedVideo" value="-B0cGRfp2s8" autocomplete="off">
+            <p class="fieldnote">Playback identity comes from the verified manifest after hashes pass.</p>
+          </div>
+        </div>
+      </details>
+      <div class="field">
+        <label for="reviewer">Reviewer name/code</label>
+        <input type="text" id="reviewer" placeholder="name-code" autocomplete="off">
+        <p class="fieldnote">Used for provenance and file naming. Not for public ranking, proof of identity, score, trust, or authority.</p>
+      </div>
+      <div class="notice">Exploratory review preview. Not official, not reviewed, not approved, not published, not canonical, and not sealed.</div>
+      <button class="btn" id="loadBtn" type="button">Open review bench</button>
+      <div class="err" id="setupError"></div>
+      <div class="stage-list" id="stages"></div>
+    </div>
+  </section>
+
+  <section class="editor" id="editor" data-dock="inline">
+    <div class="head">
+      <div>
+        <span class="candidate-chip"><span class="d"></span>Candidate draft · not yet reviewed</span>
+        <h1 id="benchTitle">Review sample</h1>
+        <div class="talk-meta"><span id="cmeta">0</span> cues · <span class="flagged" id="fmeta">0 flagged</span><span id="samplestatus"></span></div>
+        <div class="talk-nav">
+          <a class="btn ghost" id="backToSampleList" href="?demo=jetha" hidden>← Back to sample list</a>
+          <button class="btn ghost" id="reset" type="button">Choose another sample</button>
+        </div>
+      </div>
+      <div class="dock">
+        <div class="dock-label">Video</div>
+        <span class="seg" role="group" aria-label="Video dock mode">
+          <button type="button" data-dock="corner">Corner</button>
+          <button type="button" data-dock="inline" aria-pressed="true">Inline</button>
+          <button type="button" data-dock="hidden">Hidden</button>
+        </span>
+        <div class="msg" id="docknote"></div>
+      </div>
+    </div>
+
+    <div class="floatv" id="floatv">
+      <div class="fv-bar" data-drag><span class="grip">⠿</span><span class="ttl" id="fvTitle"></span><button type="button" class="x" id="fvHide" aria-label="Hide video">✕</button></div>
+      <div class="player-shell" id="playerShell"><div id="player"></div></div>
+      <div class="fv-resize" data-resize aria-hidden="true"></div>
+    </div>
+
+    <div class="body">
+      <div class="b-left">
+        <div class="playback-warning" id="playbackWarning">YouTube playback is unavailable. Text review remains local, but cue audio cannot be verified in this session.</div>
+        <div class="rail-card">
+          <div class="gauge">
+            <div class="gauge-track"><div class="gauge-fill" id="gfill"></div></div>
+            <div class="gauge-meta" aria-live="polite">
+              <span class="lab">Checked</span>
+              <span class="count"><b id="gcount">0</b> / <span id="gtotal">0</span></span>
+              <span class="sub" id="gnote">Local tracking only.</span>
+            </div>
+          </div>
+        </div>
+        <div class="rail-card">
+          <div class="ev-line"><span id="hashRailStatus">Evidence: load snapshot to verify hashes</span><button class="link-btn" id="provJump" type="button">details ↓</button></div>
+        </div>
+      </div>
+
+      <div class="b-right">
+        <div class="ctl-grid">
+          <div class="panel">
+            <div class="field">
+              <label for="reviewerEdit">Reviewer name/code</label>
+              <input type="text" id="reviewerEdit" autocomplete="off">
+            </div>
+            <p class="fieldnote">Used for provenance and file naming. Not for public ranking, proof of identity, score, trust, or authority.</p>
+          </div>
+          <div class="panel" style="display:flex;flex-direction:column;justify-content:center">
+            <h2 style="font-size:1.15rem;margin-bottom:8px">Review completion</h2>
+            <p class="fieldnote">When the review feels complete, prepare the local package and see the future submission pathway.</p>
+            <div class="download-row">
+              <button class="btn" id="prepareSubmission" type="button">Prepare review submission</button>
+            </div>
+            <div class="msg" id="completionHint">Real submission is not enabled in this public demo.</div>
+          </div>
+        </div>
+
+        <details class="insight-panel" id="insight" open>
+          <summary id="insightHead" aria-expanded="true">
+            <span class="chev">›</span>
+            <h2>Human insight capture</h2>
+            <span class="insight-label">Private · local · not canonical</span>
+          </summary>
+          <div class="insight-body" id="insightBody">
+            <p class="fieldnote">Capture nectar first; crystallize later. These reflections stay in the local .review.json — they are not ranking, trust, approval, publication, or seal.</p>
+            <div class="insight-tools">
+              <div>
+                <label for="talkTagInput">Talk tags</label>
+                <div class="entry-row"><input type="text" id="talkTagInput" maxlength="140"><button class="btn small" id="addTalkTag" type="button">Add tag</button></div>
+                <div class="entry-list" id="talkTags"></div>
+              </div>
+              <div>
+                <label for="talkNoteInput">Focused notes</label>
+                <div class="entry-row"><textarea id="talkNoteInput"></textarea><button class="btn small" id="addTalkNote" type="button">Add note</button></div>
+                <div id="talkNotes"></div>
+              </div>
+              <div>
+                <label for="talkBrainInput">Brain flush</label>
+                <div class="entry-row"><textarea id="talkBrainInput"></textarea><button class="btn small" id="addTalkBrain" type="button">Add brain flush</button></div>
+                <div id="talkBrain"></div>
+              </div>
+              <div class="err" id="insightError"></div>
+            </div>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <p class="cues-label">The lines</p>
+    <div class="cues" id="cues"></div>
+    <div class="clearance" id="clearance"></div>
+
+    <div class="prov-strip" id="prov">
+      <h4>Provenance &amp; integrity</h4>
+      <div class="labels" id="manifestLabels"></div>
+      <div class="hash-grid" id="hashGrid"></div>
+    </div>
+
+    <footer class="bench-footer">
+      <div class="sadhu">Sādhu · Akāliko 🌸</div>
+      <p class="foot-note">Candidate ≠ reviewed ≠ approved ≠ published ≠ sealed. Machine signals, human decides. This preview assists, but does not replace, human or monastic authority.</p>
+    </footer>
+  </section>
+</div>
+
+<nav class="float-nav" id="floatNav" aria-label="Review navigation" hidden>
+  <button type="button" id="navTop">Top</button>
+  <button type="button" id="navBottom">Bottom</button>
+</nav>
+
+<div class="modal-backdrop" id="resetConfirm" hidden role="dialog" aria-modal="true" aria-labelledby="resetConfirmTitle" aria-describedby="resetConfirmMessage">
+  <div class="modal">
+    <h2 id="resetConfirmTitle">Start a new sample?</h2>
+    <p id="resetConfirmMessage">This will discard the current local session, including subtitle edits, Checked progress, removal proposals, and private Human Insight Capture. Download the .srt + .review.json first if you want to preserve this work.</p>
+    <div class="modal-actions">
+      <button class="btn ghost" id="resetCancel" type="button">Cancel — keep reviewing</button>
+      <button class="btn" id="resetDiscard" type="button">Discard and choose another sample</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="completionPanel" hidden role="dialog" aria-modal="true" aria-labelledby="completionTitle" aria-describedby="completionIntro">
+  <div class="modal wide">
+    <h2 id="completionTitle">Review completion</h2>
+    <p id="completionIntro">This preview shows how a finished subtitle review would move toward a Jetha review queue. Real submission is not enabled in this public demo.</p>
+    <ol class="completion-flow">
+      <li>Reviewer checks and edits the subtitle candidate.</li>
+      <li>Reviewer prepares a local review package.</li>
+      <li>In a future enabled workflow, the package can be submitted to a private Jetha review queue.</li>
+      <li>Jetha or designated human reviewers decide what, if anything, is approved, published, canonical, or sealed.</li>
+    </ol>
+    <p class="notice">Submitting is not approval. Approval, publication, and seal remain separate human decisions.</p>
+    <div class="completion-summary" aria-label="Current local review summary">
+      <div class="summary-card"><span>Checked cues</span><b id="completionChecked">0 / 0</b></div>
+      <div class="summary-card"><span>No-subtitle proposals</span><b id="completionProposals">0</b></div>
+      <div class="summary-card"><span>Human Insight</span><b id="completionInsight">0 entries</b></div>
+      <div class="summary-card"><span>Reviewer code</span><b id="completionReviewer">missing</b></div>
+    </div>
+    <div class="err" id="downloadBlocker"></div>
+    <div class="download-row">
+      <button class="btn" id="downloadSubmission" type="button" disabled>Download local review package</button>
+      <button class="btn ghost" id="completionClose" type="button">Keep reviewing</button>
+    </div>
+    <p class="fieldnote">Downloads `.srt + .review.json` to your device. Nothing is sent, delivered, approved, published, or sealed.</p>
+    <div class="msg" id="downloadmsg"></div>
+    <div class="msg" id="autoCaptureMsg"></div>
+    <div class="future-submit">
+      <button class="btn ghost" id="futureSubmit" type="button" disabled>Submit to Jetha review queue — not enabled in this public preview</button>
+      <p>If Jetha finds this workflow useful, this button can later connect to a private intake queue chosen by Jetha.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const PAGE_VERSION = "sota-review-internal-canary-vnext-remove-cue-preview-candidate-local";
+const YOUTUBE_UNAVAILABLE = "YouTube playback is unavailable. Text review remains local, but cue audio cannot be verified in this session.";
+const STAGES = ["index","manifest","draft","metadata","player","ready"];
+const PLAY_ICON = "▶";
+const PAUSE_ICON = "Ⅱ";
+const PLAYBACK_WATCH_MS = 100;
+const REMOVE_REASONS = [
+  "no_subtitle",
+  "music_only",
+  "hallucination_or_non_speech",
+  "duplicate",
+  "timing_source_mismatch",
+  "other"
+];
+const REMOVAL_READONLY_COPY = "Removal proposed — this cue will be omitted from the candidate SRT. Text editing is inactive until you undo the proposal.";
+const LIMITS = {
+  talkTags:100,
+  cueTags:30,
+  tagChars:128,
+  talkNotes:20,
+  talkBrain:10,
+  cueNotes:10,
+  cueBrain:5,
+  noteChars:8000,
+  brainChars:32000
+};
+const JETHA_DEMO_ROOT = "./internal-jetha-protected-preview-v1/";
+const JETHA_PUBLIC_TALKS = [
+  { slug:"love-kindness", title:"Why are the poor so poor | Buddhism Explain", short_title:"Love and kindness", channel:"@jethavanarama_eng", description:"A short opening sample about what we give and what returns to us.", video_id:"-B0cGRfp2s8", youtube_url:"https://www.youtube.com/watch?v=-B0cGRfp2s8" },
+  { slug:"suffering-perception", title:"Do you know why you suffer?", short_title:"Suffering and perception", channel:"@enlight_u", description:"A review sample for inspecting how meaning flows through conditioned subtitle cues.", video_id:"0MMn_dv11R0", youtube_url:"https://www.youtube.com/watch?v=0MMn_dv11R0" },
+  { slug:"stress-free-life", title:"The formulae for a stress free life", short_title:"Stress free life", channel:"@Siwmaga_eng", description:"Exact requested Siwmaga sample with a prepared subtitle review candidate.", video_id:"W3vYHnD1W8w", youtube_url:"https://www.youtube.com/watch?v=W3vYHnD1W8w" },
+  { slug:"calm-mind-anywhere", title:"Theory of Everything review sample", short_title:"Theory of Everything sample", channel:"@theory.of.e", description:"Same-channel substitute with a prepared subtitle review candidate.", video_id:"i5FUlNOZTnA", youtube_url:"https://www.youtube.com/shorts/i5FUlNOZTnA" },
+  { slug:"love-marriage-issues", title:"Scientist in Robes review sample", short_title:"Scientist in Robes sample", channel:"@ScientistinRobes", description:"Same-channel substitute with a prepared subtitle review candidate.", video_id:"MGIN6ntBe-g", youtube_url:"https://www.youtube.com/shorts/MGIN6ntBe-g" },
+  { slug:"first-and-last", title:"Compass review sample", short_title:"Compass sample", channel:"@compass_guide", description:"Same-channel substitute with a prepared subtitle review candidate.", video_id:"4MsaI7_ZEFU", youtube_url:"https://www.youtube.com/shorts/4MsaI7_ZEFU" },
+  { slug:"perception-deception", title:"Perception is a Deception", short_title:"Perception is a deception", channel:"@enlight_u", description:"A reflective sample for reviewing phrasing, timing, and cue boundaries.", video_id:"-ik-a_iQ_dg", youtube_url:"https://www.youtube.com/watch?v=-ik-a_iQ_dg" },
+  { slug:"live-to-give", title:"Live to give life to others", short_title:"Live to give", channel:"@jethavanarama_eng", description:"A service-oriented sample for inspecting a longer natural subtitle flow.", video_id:"-yPJJXnafgw", youtube_url:"https://www.youtube.com/watch?v=-yPJJXnafgw" }
+];
+const JETHA_DEMO_SAMPLES = {
+  "love-kindness": { title:"Love and kindness", channel:"@jethavanarama_eng", description:"A short opening sample about what we give and what returns to us.", video_id:"-B0cGRfp2s8" },
+  "suffering-perception": { title:"Suffering and perception", channel:"@enlight_u", description:"A review sample for inspecting how meaning flows through conditioned subtitle cues.", video_id:"0MMn_dv11R0" },
+  "stress-free-life": { title:"Stress free life", channel:"@Siwmaga_eng", description:"Exact requested Siwmaga sample with a prepared subtitle review candidate.", video_id:"W3vYHnD1W8w" },
+  "calm-mind-anywhere": { title:"Theory of Everything sample", channel:"@theory.of.e", description:"Same-channel substitute with a prepared subtitle review candidate.", video_id:"i5FUlNOZTnA" },
+  "love-marriage-issues": { title:"Scientist in Robes sample", channel:"@ScientistinRobes", description:"Same-channel substitute with a prepared subtitle review candidate.", video_id:"MGIN6ntBe-g" },
+  "first-and-last": { title:"Compass sample", channel:"@compass_guide", description:"Same-channel substitute with a prepared subtitle review candidate.", video_id:"4MsaI7_ZEFU" },
+  "perception-deception": { title:"Perception is a deception", channel:"@enlight_u", description:"A reflective sample for reviewing phrasing, timing, and cue boundaries.", video_id:"-ik-a_iQ_dg" },
+  "live-to-give": { title:"Live to give", channel:"@jethavanarama_eng", description:"A service-oriented sample for inspecting a longer natural subtitle flow.", video_id:"-yPJJXnafgw" }
+};
+
+let indexData = null;
+let manifest = null;
+let metadata = null;
+let manifestSha256 = "";
+let draftSha256 = "";
+let metadataSha256 = "";
+let cues = [];
+let srtEnvelope = { bom:"", leading:"", trailing:"", lineBreak:"\n" };
+let verifiedVideoId = "";
+let snapshotId = "";
+let reviewerValue = "";
+let player = null;
+let playerReady = false;
+let playbackAvailable = false;
+let playbackWatcher = null;
+let playingIdx = -1;
+let activeIdx = -1;
+let playerGeneration = 0;
+let youtubeApiPromise = null;
+let jethaDemoMode = false;
+let dirty = false;
+const insight = {
+  talk_tags:[],
+  talk_notes:[],
+  talk_brain_flush:[],
+  cue_annotations:{}
+};
+
+function resetStages(){
+  $("stages").innerHTML = "";
+  STAGES.forEach(name => {
+    const row = document.createElement("div");
+    row.className = "stage";
+    row.dataset.stage = name;
+    const label = document.createElement("b");
+    const msg = document.createElement("span");
+    label.textContent = name;
+    msg.textContent = "waiting";
+    row.append(label, msg);
+    $("stages").append(row);
+  });
+}
+
+function setStage(name, status, message){
+  const row = document.querySelector(`[data-stage="${name}"]`);
+  if(!row) return;
+  row.className = `stage ${status || ""}`;
+  row.querySelector("span:last-child").textContent = message || "";
+}
+
+function markDirty(){
+  dirty = true;
+}
+
+function clearDirty(){
+  dirty = false;
+}
+
+function hasPendingInsightDrafts(){
+  return Array.from(document.querySelectorAll(
+    "#talkTagInput,#talkNoteInput,#talkBrainInput,[id^='cueTag-'],[id^='cueNote-'],[id^='cueBrain-']"
+  )).some(field => field.value && field.value.trim() !== "");
+}
+
+function hasCommittedHumanInsights(){
+  if(insight.talk_tags.length || insight.talk_notes.length || insight.talk_brain_flush.length) return true;
+  return Object.values(insight.cue_annotations).some(ann =>
+    ann.cue_tags.length || ann.cue_notes.length || ann.cue_brain_flush.length
+  );
+}
+
+function hasLocalReviewWork(){
+  const reviewerChanged = $("reviewerEdit").value.trim() !== reviewerValue;
+  return dirty
+    || reviewerChanged
+    || hasPendingInsightDrafts()
+    || hasCommittedHumanInsights()
+    || cues.some(cue => cue.checked || cue.text !== cue.original_text || cue.remove_cue_proposal);
+}
+
+function hasUnsavedChanges(){
+  return hasLocalReviewWork();
+}
+
+function parseVideoId(value){
+  const s = (value || "").trim();
+  if(/^[A-Za-z0-9_-]{11}$/.test(s)) return s;
+  const m = s.match(/(?:v=|\/embed\/|youtu\.be\/|\/shorts\/)([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : "";
+}
+
+function sampleBySlug(slug){
+  return JETHA_DEMO_SAMPLES[slug] || null;
+}
+
+function sampleByVideoId(videoId){
+  return Object.values(JETHA_DEMO_SAMPLES).find(sample => sample.video_id === videoId) || null;
+}
+
+function setSelectedSample(sample){
+  if(!sample) return;
+  $("packRoot").value = JETHA_DEMO_ROOT;
+  $("requestedVideo").value = sample.video_id;
+  $("demoTitle").textContent = sample.title;
+  $("demoChannel").textContent = sample.channel;
+  $("demoDescription").textContent = sample.description;
+}
+
+function renderSampleGallery(){
+  const cards = $("galleryCards");
+  cards.innerHTML = "";
+  JETHA_PUBLIC_TALKS.forEach(talk => {
+    const card = document.createElement("article");
+    card.className = "gallery-card";
+
+    const status = document.createElement("span");
+    status.className = "gallery-status";
+    status.textContent = "Subtitle review sample available";
+
+    const title = document.createElement("h3");
+    title.textContent = talk.title;
+
+    const channel = document.createElement("p");
+    channel.textContent = talk.channel;
+
+    const description = document.createElement("p");
+    description.textContent = talk.description;
+
+    const actions = document.createElement("div");
+    actions.className = "gallery-actions";
+
+    const review = document.createElement("a");
+    review.className = "btn small";
+    review.href = `?demo=jetha&sample=${encodeURIComponent(talk.slug)}`;
+    review.target = "_blank";
+    review.rel = "noopener noreferrer";
+    review.textContent = "Open subtitle review sample ↗";
+    actions.append(review);
+
+    card.append(status, title, channel, description, actions);
+    cards.append(card);
+  });
+}
+
+function showGalleryMode(){
+  renderSampleGallery();
+  $("setupTitle").textContent = "Choose a review sample";
+  $("setupIntro").textContent = "Select a public talk below. All eight selected public talks now have prepared subtitle review candidates.";
+  $("sampleGallery").hidden = false;
+  $("sampleSetupControls").hidden = true;
+  $("setupError").textContent = "";
+}
+
+function showSampleSetup(sample){
+  setSelectedSample(sample);
+  $("setupTitle").textContent = "Open review sample";
+  $("setupIntro").textContent = "Add a reviewer name/code, then open the selected subtitle review sample.";
+  $("sampleGallery").hidden = true;
+  $("sampleSetupControls").hidden = false;
+  $("setupError").textContent = "";
+  $("reviewer").focus();
+}
+
+function applyDemoLaunch(){
+  const params = new URLSearchParams(window.location.search);
+  jethaDemoMode = params.get("demo") === "jetha";
+  $("backToSampleList").hidden = !jethaDemoMode;
+  const requestedSlug = params.get("sample");
+  if(jethaDemoMode && !requestedSlug){
+    showGalleryMode();
+    return;
+  }
+  const sample = sampleBySlug(requestedSlug) || sampleBySlug("love-kindness");
+  showSampleSetup(sample);
+  if(jethaDemoMode && requestedSlug && !sampleBySlug(requestedSlug)){
+    $("setupError").textContent = "Review sample link not recognized. The first curated sample is selected instead.";
+  }
+}
+
+function reviewerSlug(value){
+  return (value || "")
+    .trim()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .toLowerCase()
+    .replace(/[^a-z0-9_-]+/g,"-")
+    .replace(/[-_]{2,}/g,"-")
+    .replace(/^[-_]+|[-_]+$/g,"");
+}
+
+function utcIso(){
+  return new Date().toISOString().replace(/\.\d{3}Z$/,"Z");
+}
+
+function utcStamp(){
+  const d = new Date();
+  const p = n => String(n).padStart(2,"0");
+  return `${d.getUTCFullYear()}${p(d.getUTCMonth()+1)}${p(d.getUTCDate())}T${p(d.getUTCHours())}${p(d.getUTCMinutes())}${p(d.getUTCSeconds())}Z`;
+}
+
+function shortId(){
+  const bytes = new Uint8Array(4);
+  if(!window.crypto || !window.crypto.getRandomValues){
+    throw new Error("Secure random ID generation is unavailable.");
+  }
+  window.crypto.getRandomValues(bytes);
+  return Array.from(bytes).map(b => b.toString(16).padStart(2,"0")).join("");
+}
+
+function annotationId(){
+  return `ann_${Date.now().toString(36)}_${shortId()}`;
+}
+
+function tagSlug(label){
+  return label
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .toLowerCase()
+    .replace(/[\s-]+/g,"_")
+    .replace(/[^a-z0-9_]+/g,"")
+    .replace(/_+/g,"_")
+    .replace(/^_+|_+$/g,"");
+}
+
+function ensureWebCrypto(){
+  if(!window.crypto || !window.crypto.subtle || !window.crypto.subtle.digest){
+    throw new Error("Web Crypto SHA-256 is unavailable.");
+  }
+}
+
+async function sha256Hex(bytes){
+  ensureWebCrypto();
+  const digest = await window.crypto.subtle.digest("SHA-256", bytes);
+  return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2,"0")).join("");
+}
+
+function assertHashFormat(hash, label){
+  if(!/^[a-f0-9]{64}$/.test(hash || "")){
+    throw new Error(`${label} is not lowercase SHA-256 hex.`);
+  }
+}
+
+async function verifyBytes(bytes, expected, label){
+  assertHashFormat(expected, label);
+  const actual = await sha256Hex(bytes);
+  if(actual !== expected){
+    throw new Error(`${label} mismatch.`);
+  }
+  return actual;
+}
+
+function bytesToText(bytes){
+  return new TextDecoder("utf-8").decode(bytes);
+}
+
+function parseJsonBytes(bytes, label){
+  try{
+    return JSON.parse(bytesToText(bytes));
+  }catch(error){
+    throw new Error(`${label} is not valid JSON.`);
+  }
+}
+
+function safeRelativeRoot(value){
+  const root = (value || "").trim();
+  if(!root) throw new Error("Example set missing.");
+  if(root.includes("\\") || root.includes("..") || root.startsWith("/") || /^[a-z]+:/i.test(root)){
+    throw new Error("Example set rejected.");
+  }
+  return root.endsWith("/") ? root : `${root}/`;
+}
+
+function safePackPath(path){
+  if(typeof path !== "string" || !path.trim()) throw new Error("Pack path missing.");
+  if(path.includes("\\") || path.includes("..") || path.startsWith("/") || /^[a-z]+:/i.test(path)){
+    throw new Error("Pack path rejected.");
+  }
+  return path;
+}
+
+async function fetchPackBytes(root, path){
+  const safeRoot = safeRelativeRoot(root);
+  const safePath = safePackPath(path);
+  const response = await fetch(safeRoot + safePath, { method:"GET", cache:"no-store" });
+  if(!response.ok) throw new Error(`Internal pack GET failed: ${safePath}`);
+  return new Uint8Array(await response.arrayBuffer());
+}
+
+function abbr(hash){
+  return hash ? `${hash.slice(0,12)}...${hash.slice(-8)}` : "";
+}
+
+function parseSeconds(ts){
+  const m = ts.match(/^(\d{1,2}):(\d{2}):(\d{2})([,.])(\d{1,3})$/);
+  if(!m) return null;
+  const ms = Number((m[5] + "000").slice(0,3));
+  return Number(m[1]) * 3600 + Number(m[2]) * 60 + Number(m[3]) + ms / 1000;
+}
+
+function shortTime(seconds){
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor(seconds % 3600 / 60);
+  const s = Math.floor(seconds % 60);
+  return `${h}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+}
+
+function parseSrtStrict(text){
+  const source = text || "";
+  const bom = source.startsWith("\uFEFF") ? "\uFEFF" : "";
+  const body = bom ? source.slice(1) : source;
+  const lineBreak = body.includes("\r\n") ? "\r\n" : body.includes("\r") ? "\r" : "\n";
+  const normalized = body.replace(/\r\n/g,"\n").replace(/\r/g,"\n");
+  const result = { cues:[], errors:[], envelope:{ bom, leading:"", trailing:"", lineBreak } };
+  if(!normalized.trim()){
+    result.errors.push("SRT is empty.");
+    return result;
+  }
+  const leading = normalized.match(/^\n*/)[0];
+  const trailing = normalized.match(/\n*$/)[0];
+  const core = normalized.slice(leading.length, normalized.length - trailing.length);
+  result["envelope"].leading = leading;
+  result["envelope"].trailing = trailing;
+  const chunks = [];
+  let last = 0;
+  const separatorPattern = /\n{2,}/g;
+  let separatorMatch = null;
+  while((separatorMatch = separatorPattern.exec(core))){
+    chunks.push({ block:core.slice(last, separatorMatch.index), separatorAfter:separatorMatch[0] });
+    last = separatorPattern.lastIndex;
+  }
+  chunks.push({ block:core.slice(last), separatorAfter:"" });
+  chunks.forEach((chunk, index) => {
+    const lines = chunk.block.split("\n");
+    const label = `Block ${index + 1}`;
+    if(lines.length < 2){
+      result.errors.push(`${label}: incomplete block.`);
+      return;
+    }
+    if(!/^\d+$/.test(lines[0].trim())){
+      result.errors.push(`${label}: invalid cue number.`);
+      return;
+    }
+    const cueNumber = Number(lines[0].trim());
+    if(cueNumber !== index + 1){
+      result.errors.push(`${label}: non-sequential cue number.`);
+      return;
+    }
+    const match = lines[1].match(/^\s*(\d{1,2}:\d{2}:\d{2}[,.]\d{1,3})\s*-->\s*(\d{1,2}:\d{2}:\d{2}[,.]\d{1,3})(.*)$/);
+    if(!match){
+      result.errors.push(`${label}: malformed timing line.`);
+      return;
+    }
+    const start = parseSeconds(match[1]);
+    const end = parseSeconds(match[2]);
+    if(start === null || end === null || end <= start){
+      result.errors.push(`${label}: invalid start/end time.`);
+      return;
+    }
+    const originalText = lines.slice(2).join("\n");
+    result.cues.push({
+      cue_id:`cue-${index + 1}`,
+      cue_index:index + 1,
+      timingLine:lines[1],
+      start,
+      end,
+      original_text:originalText,
+      text:originalText,
+      checked:false,
+      remove_cue_proposal:null,
+      separatorAfter:chunk.separatorAfter
+    });
+  });
+  if(result.cues.length !== chunks.length && result.errors.length === 0){
+    result.errors.push("SRT parsing would lose content.");
+  }
+  return result;
+}
+
+function validateManifest(data, entry, requestedId){
+  const required = ["manifest_version","snapshot_id","video_id","display_draft_url","meta_public_url","draft_sha256","meta_public_sha256","artifact_class","evidence_chain_status","review_status","authority_status","visibility"];
+  required.forEach(key => {
+    if(!(key in data)) throw new Error(`Manifest schema invalid: missing ${key}.`);
+  });
+  if(!/^[A-Za-z0-9_-]{11}$/.test(data.video_id)){
+    throw new Error("Manifest video_id invalid.");
+  }
+  if(requestedId && data.video_id !== requestedId){
+    throw new Error("Manifest video_id does not match selected index item.");
+  }
+  if(entry.video_id && data.video_id !== entry.video_id){
+    throw new Error("Manifest/index video_id mismatch.");
+  }
+  if(entry.snapshot_id && data.snapshot_id !== entry.snapshot_id){
+    throw new Error("Manifest snapshot_id mismatch.");
+  }
+  if(data.artifact_class !== "legacy_experimental_draft") throw new Error("Manifest artifact_class mismatch.");
+  if(data.evidence_chain_status !== "incomplete") throw new Error("Manifest evidence_chain_status mismatch.");
+  if(data.review_status !== "not_qualified") throw new Error("Manifest review_status mismatch.");
+  if(data.authority_status !== "none") throw new Error("Manifest authority_status mismatch.");
+  if(data.visibility !== "sota_internal_private_canary") throw new Error("Manifest visibility mismatch.");
+  safePackPath(data.display_draft_url);
+  safePackPath(data.meta_public_url);
+  assertHashFormat(data.draft_sha256, "draft_sha256");
+  assertHashFormat(data.meta_public_sha256, "meta_public_sha256");
+}
+
+async function loadInternalCanary(){
+  $("setupError").textContent = "";
+  $("downloadmsg").textContent = "";
+  $("autoCaptureMsg").textContent = "";
+  resetStages();
+  teardownPlayer();
+  ensureWebCrypto();
+  const root = $("packRoot").value;
+  const requestedId = parseVideoId($("requestedVideo").value);
+  reviewerValue = $("reviewer").value.trim();
+  if(!requestedId){
+    $("setupError").textContent = "Choose a review sample.";
+    return;
+  }
+  if(!reviewerValue){
+    $("setupError").textContent = "Enter a Reviewer name/code.";
+    return;
+  }
+  try{
+    setStage("index", "", "loading");
+    const indexBytes = await fetchPackBytes(root, "sota_index.json");
+    indexData = parseJsonBytes(indexBytes, "Index");
+    if(!indexData || !Array.isArray(indexData.items) || !indexData.index_version){
+      throw new Error("Index schema invalid.");
+    }
+    const entry = indexData.items.find(item => item.video_id === requestedId);
+    if(!entry) throw new Error("Index has no item for the selected sample.");
+    if(entry.availability !== "available") throw new Error(`${entry.availability || "unavailable"}: selected sample is not loadable.`);
+    if(!entry.manifest_url || !entry.manifest_sha256) throw new Error("Index entry has no explicit manifest.");
+    safePackPath(entry.manifest_url);
+    assertHashFormat(entry.manifest_sha256, "manifest_sha256");
+    setStage("index", "pass", `${indexData.index_version}`);
+
+    setStage("manifest", "", "loading");
+    const manifestBytes = await fetchPackBytes(root, entry.manifest_url);
+    manifestSha256 = await verifyBytes(manifestBytes, entry.manifest_sha256, "manifest_sha256");
+    manifest = parseJsonBytes(manifestBytes, "Manifest");
+    validateManifest(manifest, entry, requestedId);
+    verifiedVideoId = manifest.video_id;
+    snapshotId = manifest.snapshot_id;
+    setStage("manifest", "pass", abbr(manifestSha256));
+
+    setStage("draft", "", "loading");
+    const draftBytes = await fetchPackBytes(root, manifest.display_draft_url);
+    draftSha256 = await verifyBytes(draftBytes, manifest.draft_sha256, "draft_sha256");
+    const parsed = parseSrtStrict(bytesToText(draftBytes));
+    if(parsed.errors.length) throw new Error(`SRT invalid: ${parsed.errors.join(" ")}`);
+    cues = parsed.cues;
+    srtEnvelope = parsed["envelope"];
+    setStage("draft", "pass", `${cues.length} cues`);
+
+    setStage("metadata", "", "loading");
+    const metaBytes = await fetchPackBytes(root, manifest.meta_public_url);
+    metadataSha256 = await verifyBytes(metaBytes, manifest.meta_public_sha256, "meta_public_sha256");
+    metadata = parseJsonBytes(metaBytes, "Metadata");
+    if(metadata.video_id && metadata.video_id !== verifiedVideoId) throw new Error("Metadata video_id mismatch.");
+    setStage("metadata", "pass", abbr(metadataSha256));
+
+    openEditor();
+    await initializeVerifiedPlayer();
+    setStage("ready", "pass", "ready");
+  }catch(error){
+    $("setupError").textContent = error.message;
+    const pending = STAGES.find(name => {
+      const row = document.querySelector(`[data-stage="${name}"]`);
+      return row && !row.classList.contains("pass") && !row.classList.contains("fail");
+    });
+    if(pending) setStage(pending, "fail", "blocked");
+    $("editor").style.display = "none";
+    teardownPlayer();
+  }
+}
+
+function openEditor(){
+  $("setup").style.display = "none";
+  $("editor").style.display = "block";
+  $("reviewerEdit").value = reviewerValue;
+  const currentSample = sampleByVideoId(verifiedVideoId);
+  const title = currentSample ? currentSample.title : verifiedVideoId;
+  $("benchTitle").textContent = title;
+  $("fvTitle").textContent = title;
+  $("samplestatus").textContent = currentSample ? " · exploratory sample" : ` · ${snapshotId}`;
+  renderManifestLabels();
+  renderHashes();
+  updateEvidenceSummary();
+  renderCues();
+  setDock("inline");
+  $("floatNav").hidden = false;
+  updateProgress();
+  refreshDownloadState();
+  clearDirty();
+}
+
+function stateText(value){
+  return String(value || "").replace(/_/g," ");
+}
+
+function publicVisibilityLabel(value){
+  if(value === "sota_internal_private_canary") return "exploratory review preview";
+  return stateText(value);
+}
+
+function renderManifestLabels(){
+  const semanticLabels = manifest.semantic_labels || {};
+  const labels = [
+    { text:manifest.artifact_class, strong:true },
+    { text:`evidence chain: ${stateText(manifest.evidence_chain_status)}` },
+    { text:`review: ${stateText(semanticLabels.review_status || manifest.semantic_review_status || manifest.review_status)}` },
+    { text:`publication: ${stateText(semanticLabels.publication_status || manifest.publication_status)}` },
+    { text:`seal: ${stateText(semanticLabels.seal_status || manifest.seal_status)}` },
+    { text:`timing: ${stateText(semanticLabels.timing_status || manifest.timing_status)}` },
+    { text:`timing confidence: ${stateText(semanticLabels.timing_confidence || manifest.timing_confidence)}` },
+    { text:`authority: ${stateText(manifest.authority_status)}` },
+    { text:publicVisibilityLabel(manifest.visibility) }
+  ].filter(item => item.text && !item.text.endsWith(": "));
+  $("manifestLabels").innerHTML = "";
+  labels.forEach(item => {
+    const pill = document.createElement("span");
+    pill.className = "pill" + (item.strong ? " strong" : "");
+    pill.textContent = item.text;
+    $("manifestLabels").append(pill);
+  });
+}
+
+function renderHashes(){
+  $("hashGrid").innerHTML = "";
+  [
+    ["manifest", manifestSha256],
+    ["parent draft", draftSha256],
+    ["metadata", metadataSha256]
+  ].forEach(([label, hash]) => {
+    const row = document.createElement("div");
+    row.textContent = `${label}: ${abbr(hash)}`;
+    $("hashGrid").append(row);
+  });
+  updateEvidenceSummary();
+}
+
+function updateEvidenceSummary(){
+  const target = $("hashRailStatus");
+  if(!target) return;
+  if(!manifest){
+    target.textContent = "Evidence: load snapshot to verify hashes";
+    return;
+  }
+  const artifact = manifest.artifact_class === "legacy_experimental_draft"
+    ? "legacy draft"
+    : stateText(manifest.artifact_class);
+  const hashStatus = manifestSha256 && draftSha256 && metadataSha256 ? "Hashes verified ✓" : "Hashes pending…";
+  target.textContent = `${hashStatus} · ${artifact}`;
+}
+
+function commonAnnotation(){
+  return {
+    annotation_id:annotationId(),
+    source:"reviewer_proposed",
+    status:"not_canonical",
+    visibility_scope:"private_review",
+    sanitization_status:"not_sanitized",
+    sanitization_required_before_public_export:true,
+    public_export_allowed:false,
+    created_at:utcIso()
+  };
+}
+
+function makeTag(label){
+  const slug = tagSlug(label);
+  return {
+    ...commonAnnotation(),
+    label,
+    slug:slug || null,
+    slug_status:slug ? "machine_derived_noncanonical" : "not_derivable_noncanonical"
+  };
+}
+
+function makeTextEntry(text, captureKind){
+  return {
+    ...commonAnnotation(),
+    capture_kind:captureKind,
+    text,
+    preservation:"verbatim"
+  };
+}
+
+function setInsightError(message){
+  $("insightError").textContent = message || "";
+}
+
+function addTagToList(list, label, limit){
+  setInsightError("");
+  if(!label) return false;
+  if(label.length > LIMITS.tagChars){
+    setInsightError("Tag label is over the local technical limit.");
+    return false;
+  }
+  if(list.length >= limit){
+    setInsightError("Tag count is over the local technical limit.");
+    return false;
+  }
+  list.push(makeTag(label));
+  markDirty();
+  return true;
+}
+
+function addTextToList(list, text, kind, countLimit, charLimit){
+  setInsightError("");
+  if(!text) return false;
+  if(text.length > charLimit){
+    setInsightError("Text is over the local technical limit.");
+    return false;
+  }
+  if(list.length >= countLimit){
+    setInsightError("Entry count is over the local technical limit.");
+    return false;
+  }
+  list.push(makeTextEntry(text, kind));
+  markDirty();
+  return true;
+}
+
+function addTalkTag(){
+  const label = $("talkTagInput").value.trim();
+  if(addTagToList(insight.talk_tags, label, LIMITS.talkTags)){
+    $("talkTagInput").value = "";
+    renderTalkInsights();
+  }
+}
+
+function addTalkNote(){
+  const value = $("talkNoteInput").value;
+  if(addTextToList(insight.talk_notes, value, "talk_note", LIMITS.talkNotes, LIMITS.noteChars)){
+    $("talkNoteInput").value = "";
+    renderTalkInsights();
+  }
+}
+
+function addTalkBrain(){
+  const value = $("talkBrainInput").value;
+  if(addTextToList(insight.talk_brain_flush, value, "talk_brain_flush", LIMITS.talkBrain, LIMITS.brainChars)){
+    $("talkBrainInput").value = "";
+    renderTalkInsights();
+  }
+}
+
+function cueInsight(cue){
+  if(!insight.cue_annotations[cue.cue_id]){
+    insight.cue_annotations[cue.cue_id] = {
+      annotation_id:annotationId(),
+      source:"reviewer_proposed",
+      status:"not_canonical",
+      visibility_scope:"private_review",
+      sanitization_status:"not_sanitized",
+      sanitization_required_before_public_export:true,
+      public_export_allowed:false,
+      created_at:utcIso(),
+      parent_cue_id:cue.cue_id,
+      cue_index:cue.cue_index,
+      start:cue.start,
+      end:cue.end,
+      cue_tags:[],
+      cue_notes:[],
+      cue_brain_flush:[]
+    };
+  }
+  return insight.cue_annotations[cue.cue_id];
+}
+
+function addCueTag(cue, value){
+  const ok = addTagToList(cueInsight(cue).cue_tags, value.trim(), LIMITS.cueTags);
+  if(ok) renderCueInsightList(cue);
+  return ok;
+}
+
+function addCueNote(cue, value){
+  const ok = addTextToList(cueInsight(cue).cue_notes, value, "cue_note", LIMITS.cueNotes, LIMITS.noteChars);
+  if(ok) renderCueInsightList(cue);
+  return ok;
+}
+
+function addCueBrain(cue, value){
+  const ok = addTextToList(cueInsight(cue).cue_brain_flush, value, "cue_brain_flush", LIMITS.cueBrain, LIMITS.brainChars);
+  if(ok) renderCueInsightList(cue);
+  return ok;
+}
+
+function insightInputBlock(labelText, id, buttonText, onAdd){
+  const block = document.createElement("div");
+  const label = document.createElement("label");
+  const row = document.createElement("div");
+  const input = document.createElement("input");
+  const button = document.createElement("button");
+  label.textContent = labelText;
+  label.setAttribute("for", id);
+  row.className = "entry-row";
+  input.type = "text";
+  input.id = id;
+  button.type = "button";
+  button.className = "btn small";
+  button.textContent = buttonText;
+  button.addEventListener("click", () => {
+    if(onAdd(input.value)) input.value = "";
+  });
+  row.append(input, button);
+  block.append(label, row);
+  return block;
+}
+
+function insightTextBlock(labelText, id, buttonText, onAdd){
+  const block = document.createElement("div");
+  const label = document.createElement("label");
+  const row = document.createElement("div");
+  const textarea = document.createElement("textarea");
+  const button = document.createElement("button");
+  label.textContent = labelText;
+  label.setAttribute("for", id);
+  row.className = "entry-row";
+  textarea.id = id;
+  button.type = "button";
+  button.className = "btn small";
+  button.textContent = buttonText;
+  button.addEventListener("click", () => {
+    if(onAdd(textarea.value)) textarea.value = "";
+  });
+  row.append(textarea, button);
+  block.append(label, row);
+  return block;
+}
+
+function chevSpan(){
+  const chev = document.createElement("span");
+  chev.className = "chev";
+  chev.textContent = "›";
+  chev.setAttribute("aria-hidden", "true");
+  return chev;
+}
+
+function renderCueInsight(cue){
+  const details = document.createElement("details");
+  details.className = "cue-insight";
+  const summary = document.createElement("summary");
+  summary.append(chevSpan(), document.createTextNode("Add insight"));
+  summary.setAttribute("aria-expanded", "false");
+  const tools = document.createElement("div");
+  tools.className = "insight-tools";
+  tools.append(
+    insightInputBlock("Cue tags", `cueTag-${cue.cue_index}`, "Add tag", value => addCueTag(cue, value)),
+    insightTextBlock("Cue notes", `cueNote-${cue.cue_index}`, "Add note", value => addCueNote(cue, value)),
+    insightTextBlock("Brain flush", `cueBrain-${cue.cue_index}`, "Add brain flush", value => addCueBrain(cue, value))
+  );
+  const lists = document.createElement("div");
+  lists.id = `cueInsightList-${cue.cue_index}`;
+  tools.append(lists);
+  details.append(summary, tools);
+  renderCueInsightList(cue, lists);
+  return details;
+}
+
+function reasonLabel(value){
+  return String(value || "").replace(/_/g, " ");
+}
+
+function buildRemoveCueProposal(cue, reason, note){
+  return {
+    operation_type:"remove_cue_proposal",
+    parent_cue_id:cue.cue_id,
+    cue_index:cue.cue_index,
+    start:cue.start,
+    end:cue.end,
+    original_text:cue.original_text,
+    status:"proposed_not_approved",
+    reason,
+    note:note || ""
+  };
+}
+
+function proposalIsValid(proposal){
+  if(!proposal || proposal.status !== "proposed_not_approved") return false;
+  if(!REMOVE_REASONS.includes(proposal.reason)) return false;
+  if(proposal.reason === "other" && !String(proposal.note || "").trim()) return false;
+  return true;
+}
+
+function renderOriginalTextDetails(cue){
+  const details = document.createElement("details");
+  const summary = document.createElement("summary");
+  const original = document.createElement("div");
+  summary.textContent = "Original cue text";
+  summary.setAttribute("aria-expanded", "false");
+  original.className = "original-text";
+  original.textContent = cue.original_text;
+  details.append(summary, original);
+  return details;
+}
+
+function renderRemoveCueProposal(cue){
+  const details = document.createElement("details");
+  details.className = "remove-panel";
+  const summary = document.createElement("summary");
+  summary.append(chevSpan(), document.createTextNode(cue.remove_cue_proposal ? "Remove cue proposal set" : "Propose no subtitle"));
+  if(!cue.remove_cue_proposal) summary.setAttribute("aria-expanded", "false");
+  const tools = document.createElement("div");
+  tools.className = "remove-tools";
+
+  if(cue.remove_cue_proposal){
+    const state = document.createElement("div");
+    const warning = document.createElement("div");
+    const undo = document.createElement("button");
+    state.className = "remove-state";
+    state.textContent = `status: proposed_not_approved · reason: ${reasonLabel(cue.remove_cue_proposal.reason)}`;
+    warning.className = "remove-warning";
+    warning.textContent = REMOVAL_READONLY_COPY;
+    if(cue.remove_cue_proposal.note){
+      const note = document.createElement("div");
+      note.className = "entry-text";
+      note.textContent = cue.remove_cue_proposal.note;
+      tools.append(state, warning, note, renderOriginalTextDetails(cue));
+    }else{
+      tools.append(state, warning, renderOriginalTextDetails(cue));
+    }
+    undo.type = "button";
+    undo.className = "btn small ghost";
+    undo.textContent = "Undo proposal";
+    undo.addEventListener("click", () => {
+      cue.remove_cue_proposal = null;
+      markDirty();
+      renderCues();
+      refreshDownloadState();
+    });
+    tools.append(undo);
+    details.open = true;
+    summary.setAttribute("aria-expanded", "true");
+    details.append(summary, tools);
+    return details;
+  }
+
+  const reasonLabelEl = document.createElement("label");
+  const reason = document.createElement("select");
+  const noteLabel = document.createElement("label");
+  const note = document.createElement("textarea");
+  const propose = document.createElement("button");
+  const error = document.createElement("div");
+
+  reasonLabelEl.textContent = "Reason";
+  reasonLabelEl.setAttribute("for", `removeReason-${cue.cue_index}`);
+  reason.id = `removeReason-${cue.cue_index}`;
+  const placeholder = document.createElement("option");
+  placeholder.value = "";
+  placeholder.textContent = "Choose reason";
+  reason.append(placeholder);
+  REMOVE_REASONS.forEach(value => {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = reasonLabel(value);
+    reason.append(option);
+  });
+  noteLabel.textContent = "Optional note";
+  noteLabel.setAttribute("for", `removeNote-${cue.cue_index}`);
+  note.id = `removeNote-${cue.cue_index}`;
+  note.placeholder = "Required when reason is other.";
+  propose.type = "button";
+  propose.className = "btn small";
+  propose.textContent = "Propose no subtitle";
+  error.className = "err";
+  propose.addEventListener("click", () => {
+    const selectedReason = reason.value;
+    const noteText = note.value.trim();
+    error.textContent = "";
+    if(!REMOVE_REASONS.includes(selectedReason)){
+      error.textContent = "Choose a reason.";
+      return;
+    }
+    if(selectedReason === "other" && !noteText){
+      error.textContent = "Reason other requires a note.";
+      return;
+    }
+    cue.remove_cue_proposal = buildRemoveCueProposal(cue, selectedReason, noteText);
+    markDirty();
+    renderCues();
+    refreshDownloadState();
+  });
+  tools.append(reasonLabelEl, reason, noteLabel, note, renderOriginalTextDetails(cue), propose, error);
+  details.append(summary, tools);
+  return details;
+}
+
+function renderTags(target, list){
+  target.innerHTML = "";
+  list.forEach(item => {
+    const chip = document.createElement("span");
+    chip.className = "entry-chip";
+    chip.textContent = `${item.label} · ${item.slug || "no_slug"}`;
+    target.append(chip);
+  });
+}
+
+function renderTexts(target, list){
+  target.innerHTML = "";
+  list.forEach(item => {
+    const box = document.createElement("div");
+    box.className = "entry-text";
+    box.textContent = item.text;
+    target.append(box);
+  });
+}
+
+function renderTalkInsights(){
+  renderTags($("talkTags"), insight.talk_tags);
+  renderTexts($("talkNotes"), insight.talk_notes);
+  renderTexts($("talkBrain"), insight.talk_brain_flush);
+}
+
+function renderCueInsightList(cue, target){
+  const container = target || $(`cueInsightList-${cue.cue_index}`);
+  if(!container) return;
+  const ann = insight.cue_annotations[cue.cue_id] || { cue_tags:[], cue_notes:[], cue_brain_flush:[] };
+  container.innerHTML = "";
+  const tagList = document.createElement("div");
+  const noteList = document.createElement("div");
+  const brainList = document.createElement("div");
+  tagList.className = "entry-list";
+  renderTags(tagList, ann.cue_tags);
+  renderTexts(noteList, ann.cue_notes);
+  renderTexts(brainList, ann.cue_brain_flush);
+  container.append(tagList, noteList, brainList);
+}
+
+function buildHumanInsightCapture(){
+  return {
+    schema_version:"human-insight-capture/1",
+    mode:"jetha_private_review",
+    capture_policy:"capture_first_sanitize_later",
+    data_classification:"private_unsanitized_review_material",
+    storage_scope:"local_download_only",
+    visibility_scope:"private_review",
+    sanitization_status:"not_sanitized",
+    sanitization_required_before_public_export:true,
+    public_export_allowed:false,
+    direct_publication_forbidden:true,
+    canonical_status:"not_canonical",
+    talk_tags:insight.talk_tags,
+    talk_notes:insight.talk_notes,
+    talk_brain_flush:insight.talk_brain_flush,
+    cue_annotations:Object.values(insight.cue_annotations).filter(ann =>
+      ann.cue_tags.length || ann.cue_notes.length || ann.cue_brain_flush.length
+    )
+  };
+}
+
+function cueFromPendingField(field, prefix){
+  const cueIndex = Number(field.id.slice(prefix.length));
+  return cues.find(cue => cue.cue_index === cueIndex) || null;
+}
+
+function capturePendingInsightFields(){
+  let captured = 0;
+  const capture = (field, add) => {
+    if(!field || !field.value || !field.value.trim()) return;
+    if(add(field.value)){
+      field.value = "";
+      captured += 1;
+    }
+  };
+  capture($("talkTagInput"), value => addTagToList(insight.talk_tags, value.trim(), LIMITS.talkTags));
+  capture($("talkNoteInput"), value => addTextToList(insight.talk_notes, value, "talk_note", LIMITS.talkNotes, LIMITS.noteChars));
+  capture($("talkBrainInput"), value => addTextToList(insight.talk_brain_flush, value, "talk_brain_flush", LIMITS.talkBrain, LIMITS.brainChars));
+  document.querySelectorAll("[id^='cueTag-']").forEach(field => {
+    const cue = cueFromPendingField(field, "cueTag-");
+    if(cue) capture(field, value => addCueTag(cue, value));
+  });
+  document.querySelectorAll("[id^='cueNote-']").forEach(field => {
+    const cue = cueFromPendingField(field, "cueNote-");
+    if(cue) capture(field, value => addCueNote(cue, value));
+  });
+  document.querySelectorAll("[id^='cueBrain-']").forEach(field => {
+    const cue = cueFromPendingField(field, "cueBrain-");
+    if(cue) capture(field, value => addCueBrain(cue, value));
+  });
+  if(captured) renderTalkInsights();
+  return captured;
+}
+
+const CPS_FLAG_THRESHOLD = 25;
+const GHOST_MAX_DUR = 0.3;
+const FOREIGN_SCRIPT_RE = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}\p{Script=Cyrillic}\p{Script=Greek}\p{Script=Arabic}\p{Script=Hebrew}\p{Script=Devanagari}\p{Script=Bengali}\p{Script=Tamil}\p{Script=Telugu}\p{Script=Thai}\p{Script=Lao}\p{Script=Myanmar}\p{Script=Georgian}\p{Script=Armenian}]/u;
+
+function visibleCharCount(text){
+  return String(text || "").normalize("NFC").replace(/\s+/g," ").trim().length;
+}
+
+/* Display-only heuristic mirroring engine/srt_dhamma.py's cps_high/ghost_cue/foreign_script
+   categories (same thresholds: CPS 25, ghost dur<0.3s, same non-Latin script hint list).
+   Result is never written to .review.json or sent anywhere — a plain-language hint only. */
+function computeCueFlag(cue){
+  const text = cue.text || "";
+  if(FOREIGN_SCRIPT_RE.test(text)){
+    return {
+      flag:"unexpected script",
+      why:"This line has characters outside the expected script for an English-language talk — sometimes a sign of non-speech audio (silence, music) being misheard as words."
+    };
+  }
+  const dur = cue.end - cue.start;
+  if(dur <= 0){
+    return { flag:"timing looks off", why:"This cue has no measurable duration. Its timing may need a check." };
+  }
+  const cps = visibleCharCount(text) / dur;
+  if(cps > CPS_FLAG_THRESHOLD){
+    return dur < GHOST_MAX_DUR
+      ? { flag:"reads a little fast", why:"This cue's time on screen is extremely short for its length — almost too brief to read. Worth confirming nothing was cut." }
+      : { flag:"reads a little fast", why:"This line passes quickly for its length. Worth confirming nothing was cut." };
+  }
+  return null;
+}
+
+function renderCues(){
+  $("cues").innerHTML = "";
+  let flaggedCount = 0;
+  cues.forEach((cue, index) => {
+    const cueFlag = computeCueFlag(cue);
+    if(cueFlag) flaggedCount += 1;
+    const row = document.createElement("article");
+    row.className = "cue"
+      + (cue.checked ? " checked" : "")
+      + (cue.remove_cue_proposal ? " proposed-removal" : "")
+      + (cueFlag ? " flagged" : "");
+    row.dataset.i = String(index);
+
+    const toggles = document.createElement("div");
+    toggles.className = "z-toggles";
+    toggles.append(renderRemoveCueProposal(cue), renderCueInsight(cue));
+
+    const zText = document.createElement("div");
+    zText.className = "z-text";
+    const top = document.createElement("div");
+    top.className = "cue-top";
+    const no = document.createElement("span");
+    no.className = "cue-no";
+    no.textContent = `#${String(cue.cue_index).padStart(2,"0")} / ${cues.length}`;
+    const time = document.createElement("button");
+    time.type = "button";
+    time.className = "cue-time";
+    time.textContent = `${shortTime(cue.start)} → ${shortTime(cue.end)}`;
+    time.addEventListener("click", () => seekCue(index));
+    top.append(no, time);
+    if(cueFlag){
+      const flagBadge = document.createElement("span");
+      flagBadge.className = "cue-flag";
+      const dot = document.createElement("span");
+      dot.className = "fd";
+      dot.setAttribute("aria-hidden", "true");
+      flagBadge.append(dot, document.createTextNode(cueFlag.flag));
+      top.append(flagBadge);
+    }
+    const text = document.createElement("p");
+    text.className = "txt" + (cue.remove_cue_proposal ? " readonly-removal" : "");
+    text.contentEditable = cue.remove_cue_proposal ? "false" : "true";
+    text.setAttribute("aria-readonly", cue.remove_cue_proposal ? "true" : "false");
+    text.spellcheck = true;
+    text.textContent = cue.text;
+    text.addEventListener("input", () => {
+      if(cue.remove_cue_proposal){
+        text.textContent = cue.text;
+        return;
+      }
+      cue.text = text.innerText;
+      markDirty();
+      refreshDownloadState();
+    });
+    zText.append(top, text);
+    if(cueFlag){
+      const why = document.createElement("p");
+      why.className = "cue-why";
+      why.textContent = cueFlag.why;
+      zText.append(why);
+    }
+
+    const actions = document.createElement("div");
+    actions.className = "z-actions";
+    const play = document.createElement("button");
+    play.type = "button";
+    play.className = "cue-play";
+    play.textContent = PLAY_ICON;
+    play.title = "Play this cue";
+    play.setAttribute("aria-label", "Play this cue");
+    play.disabled = !playbackAvailable || !playerReady;
+    play.addEventListener("click", () => toggleCuePlayback(index));
+    const check = document.createElement("button");
+    check.type = "button";
+    check.className = "check";
+    check.setAttribute("aria-pressed", cue.checked ? "true" : "false");
+    check.textContent = cue.checked ? "Checked ✓" : "Mark checked";
+    check.addEventListener("click", () => {
+      cue.checked = !cue.checked;
+      row.classList.toggle("checked", cue.checked);
+      check.setAttribute("aria-pressed", cue.checked ? "true" : "false");
+      check.textContent = cue.checked ? "Checked ✓" : "Mark checked";
+      markDirty();
+      updateProgress();
+    });
+    actions.append(play, check);
+
+    row.append(toggles, zText, actions);
+    $("cues").append(row);
+  });
+  $("cmeta").textContent = String(cues.length);
+  $("fmeta").textContent = `${flaggedCount} flagged for a closer look`;
+  refreshCuePlaybackUi();
+}
+
+function recreatePlayerTarget(){
+  $("playerShell").innerHTML = '<div id="player"></div>';
+}
+
+function clearPlaybackWatcher(){
+  if(playbackWatcher){
+    clearInterval(playbackWatcher);
+    playbackWatcher = null;
+  }
+}
+
+function teardownPlayer(){
+  playerGeneration += 1;
+  clearPlaybackWatcher();
+  if(player && typeof player.pauseVideo === "function"){
+    try{ player.pauseVideo(); }catch(error){}
+  }
+  if(player && typeof player.destroy === "function"){
+    try{ player.destroy(); }catch(error){}
+  }
+  player = null;
+  playerReady = false;
+  playbackAvailable = false;
+  playingIdx = -1;
+  activeIdx = -1;
+  recreatePlayerTarget();
+  refreshCuePlaybackUi();
+}
+
+function loadYouTubeApi(){
+  if(window.YT && typeof window.YT.Player === "function"){
+    return Promise.resolve();
+  }
+  if(youtubeApiPromise) return youtubeApiPromise;
+  youtubeApiPromise = new Promise((resolve, reject) => {
+    const previous = window.onYouTubeIframeAPIReady;
+    let settled = false;
+    const done = () => {
+      if(settled) return;
+      settled = true;
+      if(typeof previous === "function") previous();
+      resolve();
+    };
+    window.onYouTubeIframeAPIReady = done;
+    const script = document.createElement("script");
+    script.src = "https://www.youtube.com/iframe_api";
+    script.async = true;
+    script.onerror = () => {
+      if(settled) return;
+      settled = true;
+      youtubeApiPromise = null;
+      reject(new Error("YouTube IFrame API failed to load."));
+    };
+    setTimeout(() => {
+      if(settled) return;
+      settled = true;
+      youtubeApiPromise = null;
+      reject(new Error("YouTube IFrame API timed out."));
+    }, 15000);
+    document.head.append(script);
+  });
+  return youtubeApiPromise;
+}
+
+function createYouTubePlayer(videoId, generation){
+  return new Promise((resolve, reject) => {
+    let settled = false;
+    let instance = null;
+    const finish = value => {
+      if(settled) return;
+      settled = true;
+      resolve(value);
+    };
+    const fail = error => {
+      if(settled) return;
+      settled = true;
+      reject(error);
+    };
+    const timer = setTimeout(() => fail(new Error("YouTube player initialization timed out.")), 10000);
+    try{
+      instance = new window.YT.Player("player", {
+        videoId,
+        playerVars:{
+          rel:0,
+          modestbranding:1,
+          playsinline:1,
+          origin:window.location.origin
+        },
+        events:{
+          onReady:() => {
+            clearTimeout(timer);
+            if(generation !== playerGeneration){
+              if(instance && typeof instance.destroy === "function") instance.destroy();
+              return;
+            }
+            finish(instance);
+          },
+          onError:() => {
+            clearTimeout(timer);
+            fail(new Error("YouTube player failed to initialize."));
+          }
+        }
+      });
+    }catch(error){
+      clearTimeout(timer);
+      fail(error);
+    }
+  });
+}
+
+async function initializeVerifiedPlayer(){
+  const generation = playerGeneration + 1;
+  playerGeneration = generation;
+  setStage("player", "", "loading");
+  $("playbackWarning").classList.remove("show");
+  playbackAvailable = false;
+  playerReady = false;
+  refreshCuePlaybackUi();
+  try{
+    await loadYouTubeApi();
+    if(generation !== playerGeneration) return;
+    recreatePlayerTarget();
+    player = await createYouTubePlayer(verifiedVideoId, generation);
+    if(generation !== playerGeneration) return;
+    playerReady = true;
+    playbackAvailable = true;
+    setStage("player", "pass", "ready");
+    refreshCuePlaybackUi();
+  }catch(error){
+    if(generation !== playerGeneration) return;
+    showPlaybackUnavailable();
+    setStage("player", "fail", "unavailable");
+  }
+}
+
+function showPlaybackUnavailable(){
+  clearPlaybackWatcher();
+  playingIdx = -1;
+  playbackAvailable = false;
+  playerReady = false;
+  $("playbackWarning").textContent = YOUTUBE_UNAVAILABLE;
+  $("playbackWarning").classList.add("show");
+  refreshCuePlaybackUi();
+}
+
+function seekCue(index){
+  setActiveCue(index);
+  if(playerReady && playbackAvailable && player && typeof player.seekTo === "function"){
+    player.seekTo(cues[index].start, true);
+  }
+}
+
+function toggleCuePlayback(index){
+  if(!playerReady || !playbackAvailable || !player) return;
+  if(playingIdx === index){
+    pausePlayback(false);
+    return;
+  }
+  stopPlaybackForSwitch();
+  const cue = cues[index];
+  playingIdx = index;
+  setActiveCue(index);
+  if(typeof player.seekTo === "function") player.seekTo(cue.start, true);
+  if(typeof player.playVideo === "function") player.playVideo();
+  startPlaybackWatcher(index);
+  refreshCuePlaybackUi();
+}
+
+function startPlaybackWatcher(index){
+  clearPlaybackWatcher();
+  const cue = cues[index];
+  let observedCueWindow = false;
+  playbackWatcher = setInterval(() => {
+    if(playingIdx !== index){
+      clearPlaybackWatcher();
+      return;
+    }
+    if(!player || typeof player.getCurrentTime !== "function") return;
+    let currentTime = NaN;
+    try{
+      currentTime = Number(player.getCurrentTime());
+    }catch(error){
+      return;
+    }
+    if(!Number.isFinite(currentTime)) return;
+    if(currentTime >= cue.start - 0.25 && currentTime <= cue.end + 0.25){
+      observedCueWindow = true;
+    }
+    if(observedCueWindow && currentTime >= cue.end){
+      pausePlayback(false);
+    }
+  }, PLAYBACK_WATCH_MS);
+}
+
+function pausePlayback(clearActive){
+  clearPlaybackWatcher();
+  if(player && typeof player.pauseVideo === "function"){
+    try{ player.pauseVideo(); }catch(error){}
+  }
+  playingIdx = -1;
+  if(clearActive) activeIdx = -1;
+  refreshCuePlaybackUi();
+}
+
+function stopPlaybackForSwitch(){
+  clearPlaybackWatcher();
+  if(player && typeof player.pauseVideo === "function"){
+    try{ player.pauseVideo(); }catch(error){}
+  }
+  playingIdx = -1;
+}
+
+const REDUCE_MOTION = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function setActiveCue(index){
+  activeIdx = index;
+  refreshCuePlaybackUi();
+  const row = document.querySelector(`.cue[data-i="${index}"]`);
+  if(row) row.scrollIntoView({ block:"center", behavior: REDUCE_MOTION ? "auto" : "smooth" });
+}
+
+function refreshCuePlaybackUi(){
+  document.querySelectorAll(".cue").forEach(row => {
+    const index = Number(row.dataset.i);
+    row.classList.toggle("active", index === activeIdx);
+    row.classList.toggle("playing", index === playingIdx);
+    const button = row.querySelector(".cue-play");
+    if(button){
+      const isPlaying = index === playingIdx;
+      button.disabled = !playbackAvailable || !playerReady;
+      button.classList.toggle("playing", isPlaying);
+      button.textContent = isPlaying ? PAUSE_ICON : PLAY_ICON;
+      button.setAttribute("aria-pressed", isPlaying ? "true" : "false");
+    }
+  });
+}
+
+function setDock(mode){
+  $("editor").dataset.dock = mode;
+  document.querySelectorAll(".seg button[data-dock]").forEach(button => {
+    button.setAttribute("aria-pressed", button.dataset.dock === mode ? "true" : "false");
+  });
+  $("docknote").textContent = mode === "corner"
+    ? "Floating in the corner. Drag the bar to move it, the corner handle to resize."
+    : mode === "hidden"
+      ? "Hidden offscreen; playback remains operational."
+      : "Floating near the top. Drag the bar to move it, the corner handle to resize.";
+  const floatv = $("floatv");
+  floatv.style.left = "";
+  floatv.style.top = "";
+  floatv.style.right = "";
+  floatv.style.bottom = "";
+  floatv.style.width = "";
+  $("clearance").style.height = mode === "corner" ? "230px" : "0";
+}
+
+function dragifyFloatv(panel){
+  const bar = panel.querySelector("[data-drag]");
+  let id = null, sx, sy, ox, oy;
+  bar.addEventListener("pointerdown", event => {
+    if(event.target.closest("[data-hide]") || event.target.closest("#fvHide")) return;
+    if(getComputedStyle(panel).position !== "fixed") return;
+    id = event.pointerId;
+    bar.setPointerCapture(id);
+    bar.classList.add("grabbing");
+    const r = panel.getBoundingClientRect();
+    panel.style.left = r.left + "px";
+    panel.style.top = r.top + "px";
+    panel.style.right = "auto";
+    panel.style.bottom = "auto";
+    sx = event.clientX; sy = event.clientY; ox = r.left; oy = r.top;
+  });
+  bar.addEventListener("pointermove", event => {
+    if(id === null) return;
+    const w = panel.offsetWidth, h = panel.offsetHeight;
+    panel.style.left = Math.max(6, Math.min(ox + (event.clientX - sx), window.innerWidth - w - 6)) + "px";
+    panel.style.top = Math.max(6, Math.min(oy + (event.clientY - sy), window.innerHeight - h - 6)) + "px";
+  });
+  bar.addEventListener("pointerup", () => { id = null; bar.classList.remove("grabbing"); });
+}
+
+function resizifyFloatv(panel){
+  const handle = panel.querySelector("[data-resize]");
+  if(!handle) return;
+  let id = null, sx, sw;
+  handle.addEventListener("pointerdown", event => {
+    if(getComputedStyle(panel).position !== "fixed") return;
+    event.stopPropagation();
+    id = event.pointerId;
+    handle.setPointerCapture(id);
+    const r = panel.getBoundingClientRect();
+    panel.style.left = r.left + "px";
+    panel.style.top = r.top + "px";
+    panel.style.right = "auto";
+    panel.style.bottom = "auto";
+    sx = event.clientX; sw = panel.offsetWidth;
+  });
+  handle.addEventListener("pointermove", event => {
+    if(id === null) return;
+    const w = Math.max(168, Math.min(sw + (event.clientX - sx), Math.min(560, window.innerWidth - 40)));
+    panel.style.width = w + "px";
+  });
+  handle.addEventListener("pointerup", () => { id = null; });
+}
+
+function scrollToTopNav(){
+  window.scrollTo(0, 0);
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+}
+
+function scrollToBottomNav(){
+  const bottom = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+  window.scrollTo(0, bottom);
+  document.documentElement.scrollTop = bottom;
+  document.body.scrollTop = bottom;
+}
+
+function updateProgress(){
+  const checked = cues.filter(cue => cue.checked).length;
+  const total = cues.length;
+  $("gcount").textContent = String(checked);
+  $("gtotal").textContent = String(total);
+  const pct = (total ? checked / total * 100 : 0) + "%";
+  if(window.matchMedia && window.matchMedia("(max-width:920px)").matches){
+    $("gfill").style.width = pct;
+  }else{
+    $("gfill").style.height = pct;
+  }
+  $("gnote").textContent = checked === total && total > 0
+    ? "All lines checked locally. This is still a review submission, not approval."
+    : "Local tracking only.";
+}
+
+function buildCandidateSrt(){
+  const toOriginalBreaks = value => String(value || "").replace(/\n/g, srtEnvelope.lineBreak);
+  const kept = cues.filter(cue => !cue.remove_cue_proposal);
+  const separator = toOriginalBreaks("\n\n");
+  const body = kept.map((cue, index) => toOriginalBreaks(`${index + 1}\n${cue.timingLine}\n${cue.text}`)).join(separator);
+  return srtEnvelope.bom + toOriginalBreaks(srtEnvelope.leading) + body + toOriginalBreaks(srtEnvelope.trailing || "\n");
+}
+
+function validationMessage(){
+  if(!verifiedVideoId || !manifest || !cues.length) return "Load a verified internal canary first.";
+  if(!reviewerSlug($("reviewerEdit").value || $("reviewer").value)) return "Enter a Reviewer name/code.";
+  if(cues.every(cue => cue.remove_cue_proposal)) return "At least one cue must remain in the candidate SRT.";
+  const emptyCue = cues.find(cue => !cue.remove_cue_proposal && !String(cue.text || "").trim());
+  if(emptyCue) return `Cue ${emptyCue.cue_index} is empty. Add text or create an explicit no-subtitle proposal.`;
+  const invalidProposal = cues.find(cue => cue.remove_cue_proposal && !proposalIsValid(cue.remove_cue_proposal));
+  if(invalidProposal) return `Cue ${invalidProposal.cue_index} has an invalid remove cue proposal.`;
+  return "";
+}
+
+function humanInsightEntryCount(){
+  const committedTalk = insight.talk_tags.length + insight.talk_notes.length + insight.talk_brain_flush.length;
+  const committedCue = Object.values(insight.cue_annotations).reduce((total, ann) => (
+    total + ann.cue_tags.length + ann.cue_notes.length + ann.cue_brain_flush.length
+  ), 0);
+  const pending = Array.from(document.querySelectorAll(
+    "#talkTagInput,#talkNoteInput,#talkBrainInput,[id^='cueTag-'],[id^='cueNote-'],[id^='cueBrain-']"
+  )).filter(field => field.value && field.value.trim() !== "").length;
+  return committedTalk + committedCue + pending;
+}
+
+function updateCompletionSummary(){
+  const checked = cues.filter(cue => cue.checked).length;
+  $("completionChecked").textContent = `${checked} / ${cues.length}`;
+  $("completionProposals").textContent = String(removeCueProposals().length);
+  const insightCount = humanInsightEntryCount();
+  $("completionInsight").textContent = `${insightCount} ${insightCount === 1 ? "entry" : "entries"}`;
+  const slug = reviewerSlug($("reviewerEdit").value || $("reviewer").value);
+  $("completionReviewer").textContent = slug || "missing";
+}
+
+function openCompletionPanel(){
+  refreshDownloadState();
+  updateCompletionSummary();
+  $("completionPanel").hidden = false;
+}
+
+function closeCompletionPanel(){
+  $("completionPanel").hidden = true;
+}
+
+function refreshDownloadState(){
+  const blocker = validationMessage();
+  $("downloadBlocker").textContent = blocker;
+  $("downloadSubmission").disabled = !!blocker;
+  if(!$("completionPanel").hidden) updateCompletionSummary();
+}
+
+function textEdits(){
+  return cues.filter(cue => !cue.remove_cue_proposal && cue.text !== cue.original_text).map(cue => ({
+    operation_type:"text_edit",
+    parent_cue_id:cue.cue_id,
+    cue_index:cue.cue_index,
+    start:cue.start,
+    end:cue.end,
+    original_text:cue.original_text,
+    candidate_text:cue.text
+  }));
+}
+
+function removeCueProposals(){
+  return cues
+    .filter(cue => cue.remove_cue_proposal)
+    .map(cue => cue.remove_cue_proposal);
+}
+
+async function downloadCandidate(){
+  refreshDownloadState();
+  const blocker = validationMessage();
+  if(blocker) return;
+  const capturedPendingInsights = capturePendingInsightFields();
+  const slug = reviewerSlug($("reviewerEdit").value || $("reviewer").value);
+  const base = `${verifiedVideoId}__review-submission__${slug}__${utcStamp()}__${shortId()}`;
+  const candidateSrt = buildCandidateSrt();
+  const outputSrtSha = await sha256Hex(new TextEncoder().encode(candidateSrt));
+  const review = {
+    artifact_type:"local_review_candidate",
+    canonical_submission:false,
+    delivery_status:"not_delivered",
+    page_version:PAGE_VERSION,
+    index_version:indexData.index_version,
+    snapshot_id:snapshotId,
+    manifest_sha256:manifestSha256,
+    parent_sha256:draftSha256,
+    metadata_sha256:metadataSha256,
+    output_srt_sha256:outputSrtSha,
+    reviewer_slug:slug,
+    created_at_utc:utcIso(),
+    playback_verification:{
+      youtube_iframe_api_available:playbackAvailable,
+      video_id_source:"verified_internal_manifest"
+    },
+    operations:{
+      checked_cues:cues.filter(cue => cue.checked).map(cue => cue.cue_id),
+      text_edits:textEdits(),
+      remove_cue_proposals:removeCueProposals()
+    },
+    human_insight_capture:buildHumanInsightCapture()
+  };
+  triggerDownload(`${base}.srt`, candidateSrt, "text/plain;charset=utf-8");
+  triggerDownload(`${base}.review.json`, JSON.stringify(review, null, 2) + "\n", "application/json;charset=utf-8");
+  $("downloadmsg").textContent = "Downloaded locally — not delivered";
+  $("autoCaptureMsg").textContent = capturedPendingInsights
+    ? "Pending insight fields were included in the local .review.json."
+    : "";
+  clearDirty();
+}
+
+function triggerDownload(fileName, body, type){
+  const blob = new Blob([body], { type });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = fileName;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 0);
+}
+
+function askResetConfirmation(){
+  return new Promise(resolve => {
+    const dialog = $("resetConfirm");
+    const cancel = $("resetCancel");
+    const discard = $("resetDiscard");
+    const close = value => {
+      dialog.hidden = true;
+      cancel.removeEventListener("click", onCancel);
+      discard.removeEventListener("click", onDiscard);
+      document.removeEventListener("keydown", onKeydown);
+      resolve(value);
+    };
+    const onCancel = () => close(false);
+    const onDiscard = () => close(true);
+    const onKeydown = event => {
+      if(event.key === "Escape") close(false);
+    };
+    cancel.addEventListener("click", onCancel);
+    discard.addEventListener("click", onDiscard);
+    document.addEventListener("keydown", onKeydown);
+    dialog.hidden = false;
+    cancel.focus();
+  });
+}
+
+async function resetWorkbench(){
+  if(hasLocalReviewWork()){
+    const discard = await askResetConfirmation();
+    if(!discard) return;
+  }
+  if(jethaDemoMode){
+    window.location.href = "?demo=jetha";
+    return;
+  }
+  performResetWorkbench();
+}
+
+function performResetWorkbench(){
+  teardownPlayer();
+  $("editor").style.display = "none";
+  $("setup").style.display = "block";
+  $("downloadmsg").textContent = "";
+  $("autoCaptureMsg").textContent = "";
+  $("downloadBlocker").textContent = "";
+  $("playbackWarning").classList.remove("show");
+  $("floatNav").hidden = true;
+  indexData = null;
+  manifest = null;
+  metadata = null;
+  cues = [];
+  verifiedVideoId = "";
+  snapshotId = "";
+  Object.assign(insight, { talk_tags:[], talk_notes:[], talk_brain_flush:[], cue_annotations:{} });
+  updateEvidenceSummary();
+  $("talkTagInput").value = "";
+  $("talkNoteInput").value = "";
+  $("talkBrainInput").value = "";
+  renderTalkInsights();
+  clearDirty();
+  resetStages();
+  refreshDownloadState();
+}
+
+$("loadBtn").addEventListener("click", loadInternalCanary);
+$("requestedVideo").addEventListener("keydown", event => {
+  if(event.key === "Enter") loadInternalCanary();
+});
+$("reviewer").addEventListener("input", () => {
+  $("reviewerEdit").value = $("reviewer").value;
+  refreshDownloadState();
+});
+$("reviewerEdit").addEventListener("input", () => {
+  $("reviewer").value = $("reviewerEdit").value;
+  markDirty();
+  refreshDownloadState();
+});
+$("reset").addEventListener("click", resetWorkbench);
+$("prepareSubmission").addEventListener("click", openCompletionPanel);
+$("completionClose").addEventListener("click", closeCompletionPanel);
+$("downloadSubmission").addEventListener("click", downloadCandidate);
+$("addTalkTag").addEventListener("click", addTalkTag);
+$("addTalkNote").addEventListener("click", addTalkNote);
+$("addTalkBrain").addEventListener("click", addTalkBrain);
+$("navTop").addEventListener("click", scrollToTopNav);
+$("navBottom").addEventListener("click", scrollToBottomNav);
+document.addEventListener("toggle", event => {
+  if(event.target.tagName !== "DETAILS") return;
+  const summary = event.target.querySelector("summary");
+  if(summary) summary.setAttribute("aria-expanded", String(event.target.open));
+}, true);
+document.querySelectorAll(".seg button[data-dock]").forEach(button => {
+  button.addEventListener("click", () => setDock(button.dataset.dock));
+});
+$("fvHide").addEventListener("click", () => setDock("hidden"));
+dragifyFloatv($("floatv"));
+resizifyFloatv($("floatv"));
+$("provJump").addEventListener("click", () => {
+  $("prov").scrollIntoView({ behavior: REDUCE_MOTION ? "auto" : "smooth", block:"center" });
+});
+window.addEventListener("beforeunload", event => {
+  if(hasUnsavedChanges()){
+    event.preventDefault();
+    event.returnValue = "";
+  }
+});
+
+applyDemoLaunch();
+resetStages();
+renderTalkInsights();
+refreshDownloadState();
+</script>
+</body>
+</html>

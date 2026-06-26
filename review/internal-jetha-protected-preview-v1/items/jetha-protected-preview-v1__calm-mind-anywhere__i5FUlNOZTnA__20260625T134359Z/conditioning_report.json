@@ -1,0 +1,34 @@
+{
+  "artifact_type": "subtitle_conditioning_candidate",
+  "tool_version": "sentence-aware-reflow-v0.2",
+  "canonical_status": "not_canonical",
+  "approval_status": "not_approved",
+  "publication_status": "not_published",
+  "seal_status": "not_sealed",
+  "input_type": "srt",
+  "config": {
+    "max_chars_per_cue": 78,
+    "max_chars_per_line": 42,
+    "max_lines_per_cue": 2,
+    "min_words_for_soft_split": 4,
+    "min_chars_for_soft_split": 18,
+    "split_before_phrases": [
+      "and in return",
+      "and in exchange"
+    ]
+  },
+  "parent_sha256": "16738748e56eaae10f721c223f3b484d199c2ca1f50fbb5f83aaf90afa9ebd6a",
+  "word_count": 193,
+  "word_sequence_preserved": true,
+  "parent_cue_count": 26,
+  "conditioned_cue_count": 23,
+  "timing_status": "interpolated_from_srt",
+  "timing_confidence": "low",
+  "interpolation_used": true,
+  "interpolated_boundary_count": 42,
+  "conditioning_status": "conditioning_needs_human_check",
+  "warnings": [
+    "SRT fallback used; no true ASR word timestamps available",
+    "42 cue boundary/boundaries interpolated from parent SRT timing"
+  ]
+}
