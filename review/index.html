@@ -246,6 +246,15 @@
   .modal h2{font-size:24px;margin-bottom:10px}
   .modal p{margin:0;white-space:pre-line;color:var(--ink-soft)}
   .modal-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .modal.wide{width:min(720px,100%)}
+  .completion-flow{margin:16px 0 0;padding-left:22px;color:var(--ink-soft)}
+  .completion-flow li{margin:7px 0}
+  .completion-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}
+  .summary-card{background:var(--card);border:1px solid var(--line-soft);border-radius:var(--radius);padding:11px 12px}
+  .summary-card span{display:block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint)}
+  .summary-card b{display:block;font-family:Fraunces,Georgia,serif;font-size:22px;font-weight:500;margin-top:2px}
+  .future-submit{display:flex;flex-direction:column;gap:7px;background:var(--paper-2);border:1px dashed var(--line);border-radius:var(--radius);padding:12px;margin-top:14px}
+  .future-submit p{font-size:13px}
   .float-nav{position:fixed;left:16px;bottom:16px;z-index:90;display:flex;flex-direction:column;gap:6px;background:rgba(251,248,240,.92);border:1px solid var(--line);border-radius:999px;padding:6px;box-shadow:0 12px 36px -20px rgba(43,38,32,.52)}
   .float-nav[hidden]{display:none}
   .float-nav button{appearance:none;border:1px solid transparent;background:transparent;color:var(--ink-soft);border-radius:999px;font-size:12px;font-weight:700;line-height:1;padding:8px 9px;min-width:58px}
@@ -376,12 +385,12 @@
             <p class="fieldnote">Used for provenance and file naming. Not for public ranking, proof of identity, score, trust, or authority.</p>
           </div>
           <div class="panel" style="display:flex;flex-direction:column;justify-content:center">
-            <div class="err" id="downloadBlocker"></div>
+            <h2 style="font-size:1.15rem;margin-bottom:8px">Review completion</h2>
+            <p class="fieldnote">When the review feels complete, prepare the local package and see the future submission pathway.</p>
             <div class="download-row">
-              <button class="btn" id="downloadSubmission" type="button" disabled>Download local candidate (.srt + .review.json)</button>
+              <button class="btn" id="prepareSubmission" type="button">Prepare review submission</button>
             </div>
-            <div class="msg" id="downloadmsg"></div>
-            <div class="msg" id="autoCaptureMsg"></div>
+            <div class="msg" id="completionHint">Real submission is not enabled in this public demo.</div>
           </div>
         </div>
 
@@ -445,6 +454,38 @@
     <div class="modal-actions">
       <button class="btn ghost" id="resetCancel" type="button">Cancel — keep reviewing</button>
       <button class="btn" id="resetDiscard" type="button">Discard and choose another sample</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="completionPanel" hidden role="dialog" aria-modal="true" aria-labelledby="completionTitle" aria-describedby="completionIntro">
+  <div class="modal wide">
+    <h2 id="completionTitle">Review completion</h2>
+    <p id="completionIntro">This preview shows how a finished subtitle review would move toward a Jetha review queue. Real submission is not enabled in this public demo.</p>
+    <ol class="completion-flow">
+      <li>Reviewer checks and edits the subtitle candidate.</li>
+      <li>Reviewer prepares a local review package.</li>
+      <li>In a future enabled workflow, the package can be submitted to a private Jetha review queue.</li>
+      <li>Jetha or designated human reviewers decide what, if anything, is approved, published, canonical, or sealed.</li>
+    </ol>
+    <p class="notice">Submitting is not approval. Approval, publication, and seal remain separate human decisions.</p>
+    <div class="completion-summary" aria-label="Current local review summary">
+      <div class="summary-card"><span>Checked cues</span><b id="completionChecked">0 / 0</b></div>
+      <div class="summary-card"><span>No-subtitle proposals</span><b id="completionProposals">0</b></div>
+      <div class="summary-card"><span>Human Insight</span><b id="completionInsight">0 entries</b></div>
+      <div class="summary-card"><span>Reviewer code</span><b id="completionReviewer">missing</b></div>
+    </div>
+    <div class="err" id="downloadBlocker"></div>
+    <div class="download-row">
+      <button class="btn" id="downloadSubmission" type="button" disabled>Download local review package</button>
+      <button class="btn ghost" id="completionClose" type="button">Keep reviewing</button>
+    </div>
+    <p class="fieldnote">Downloads `.srt + .review.json` to your device. Nothing is sent, delivered, approved, published, or sealed.</p>
+    <div class="msg" id="downloadmsg"></div>
+    <div class="msg" id="autoCaptureMsg"></div>
+    <div class="future-submit">
+      <button class="btn ghost" id="futureSubmit" type="button" disabled>Submit to Jetha review queue — not enabled in this public preview</button>
+      <p>If Jetha finds this workflow useful, this button can later connect to a private intake queue chosen by Jetha.</p>
     </div>
   </div>
 </div>
@@ -1966,10 +2007,42 @@ function validationMessage(){
   return "";
 }
 
+function humanInsightEntryCount(){
+  const committedTalk = insight.talk_tags.length + insight.talk_notes.length + insight.talk_brain_flush.length;
+  const committedCue = Object.values(insight.cue_annotations).reduce((total, ann) => (
+    total + ann.cue_tags.length + ann.cue_notes.length + ann.cue_brain_flush.length
+  ), 0);
+  const pending = Array.from(document.querySelectorAll(
+    "#talkTagInput,#talkNoteInput,#talkBrainInput,[id^='cueTag-'],[id^='cueNote-'],[id^='cueBrain-']"
+  )).filter(field => field.value && field.value.trim() !== "").length;
+  return committedTalk + committedCue + pending;
+}
+
+function updateCompletionSummary(){
+  const checked = cues.filter(cue => cue.checked).length;
+  $("completionChecked").textContent = `${checked} / ${cues.length}`;
+  $("completionProposals").textContent = String(removeCueProposals().length);
+  const insightCount = humanInsightEntryCount();
+  $("completionInsight").textContent = `${insightCount} ${insightCount === 1 ? "entry" : "entries"}`;
+  const slug = reviewerSlug($("reviewerEdit").value || $("reviewer").value);
+  $("completionReviewer").textContent = slug || "missing";
+}
+
+function openCompletionPanel(){
+  refreshDownloadState();
+  updateCompletionSummary();
+  $("completionPanel").hidden = false;
+}
+
+function closeCompletionPanel(){
+  $("completionPanel").hidden = true;
+}
+
 function refreshDownloadState(){
   const blocker = validationMessage();
   $("downloadBlocker").textContent = blocker;
   $("downloadSubmission").disabled = !!blocker;
+  if(!$("completionPanel").hidden) updateCompletionSummary();
 }
 
 function textEdits(){
@@ -2121,6 +2194,8 @@ $("reviewerEdit").addEventListener("input", () => {
   refreshDownloadState();
 });
 $("reset").addEventListener("click", resetWorkbench);
+$("prepareSubmission").addEventListener("click", openCompletionPanel);
+$("completionClose").addEventListener("click", closeCompletionPanel);
 $("downloadSubmission").addEventListener("click", downloadCandidate);
 $("addTalkTag").addEventListener("click", addTalkTag);
 $("addTalkNote").addEventListener("click", addTalkNote);
