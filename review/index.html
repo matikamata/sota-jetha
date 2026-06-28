@@ -32,7 +32,7 @@
     --radius:8px;
     --shadow:0 1px 0 rgba(43,36,24,.05),0 10px 28px -18px rgba(43,36,24,.4);
     --body-left:280px;
-    --col-left:222px;
+    --col-left:var(--body-left);
     --col-act:150px;
     --gap:26px;
   }
@@ -180,7 +180,14 @@
   .z-toggles details[open]>summary .chev{transform:rotate(90deg)}
   .remove-panel summary{color:var(--honey-deep)}
   .cue-insight summary{color:var(--sage-deep)}
+  .remove-panel,.cue-insight{position:relative}
   .remove-tools,.insight-tools{background:var(--paper);border:1px solid var(--line-soft);border-radius:9px;padding:13px;margin-bottom:4px}
+  .remove-panel .remove-tools,.cue-insight .insight-tools{position:absolute;top:100%;left:0;margin-top:6px;width:300px;max-height:min(70vh,460px);overflow-y:auto;box-shadow:0 14px 36px -10px rgba(43,36,24,.38);z-index:5;padding-top:36px}
+  .panel-close{position:absolute;top:9px;right:9px;width:24px;height:24px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--ink-soft);font-size:12px;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0}
+  .panel-close:hover{border-color:var(--danger);color:var(--danger)}
+  @media (max-width:920px){.panel-close{display:none}}
+  .z-toggles .entry-row{grid-template-columns:1fr}
+  .z-toggles .entry-row .btn{width:100%}
   .cue-insight .insight-tools{background:var(--paper);border:1px solid var(--line-soft)}
   .remove-tools select,.remove-tools textarea,.insight-tools input,.insight-tools textarea{width:100%;font-family:Newsreader,Georgia,serif;font-size:14px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:9px;padding:8px 10px;margin-bottom:9px;resize:vertical}
   .remove-tools select:focus,.remove-tools textarea:focus,.insight-tools input:focus,.insight-tools textarea:focus{outline:2px solid var(--honey);border-color:var(--honey)}
@@ -271,6 +278,7 @@
     .z-actions{flex-direction:row}
     .z-actions .check{flex:1}
     .z-toggles{order:3}
+    .remove-panel .remove-tools,.cue-insight .insight-tools{position:static;width:100%;max-height:none;overflow-y:visible;box-shadow:none;margin-top:0;padding-top:13px}
     .floatv{position:static!important;width:100%!important;box-shadow:none;margin-bottom:10px}
   }
   @media (max-width:700px){
@@ -1282,15 +1290,30 @@ function chevSpan(){
   return chev;
 }
 
+function panelCloseButton(details, summary){
+  const close = document.createElement("button");
+  close.type = "button";
+  close.className = "panel-close";
+  close.setAttribute("aria-label", "Close");
+  close.textContent = "✕";
+  close.addEventListener("click", () => {
+    details.open = false;
+    summary.setAttribute("aria-expanded", "false");
+  });
+  return close;
+}
+
 function renderCueInsight(cue){
   const details = document.createElement("details");
   details.className = "cue-insight";
+  details.name = `cue-toggles-${cue.cue_index}`;
   const summary = document.createElement("summary");
   summary.append(chevSpan(), document.createTextNode("Add insight"));
   summary.setAttribute("aria-expanded", "false");
   const tools = document.createElement("div");
   tools.className = "insight-tools";
   tools.append(
+    panelCloseButton(details, summary),
     insightInputBlock("Cue tags", `cueTag-${cue.cue_index}`, "Add tag", value => addCueTag(cue, value)),
     insightTextBlock("Cue notes", `cueNote-${cue.cue_index}`, "Add note", value => addCueNote(cue, value)),
     insightTextBlock("Brain flush", `cueBrain-${cue.cue_index}`, "Add brain flush", value => addCueBrain(cue, value))
@@ -1343,6 +1366,7 @@ function renderOriginalTextDetails(cue){
 function renderRemoveCueProposal(cue){
   const details = document.createElement("details");
   details.className = "remove-panel";
+  details.name = `cue-toggles-${cue.cue_index}`;
   const summary = document.createElement("summary");
   summary.append(chevSpan(), document.createTextNode(cue.remove_cue_proposal ? "Remove cue proposal set" : "Propose no subtitle"));
   if(!cue.remove_cue_proposal) summary.setAttribute("aria-expanded", "false");
@@ -1357,6 +1381,7 @@ function renderRemoveCueProposal(cue){
     state.textContent = `status: proposed_not_approved · reason: ${reasonLabel(cue.remove_cue_proposal.reason)}`;
     warning.className = "remove-warning";
     warning.textContent = REMOVAL_READONLY_COPY;
+    tools.append(panelCloseButton(details, summary));
     if(cue.remove_cue_proposal.note){
       const note = document.createElement("div");
       note.className = "entry-text";
@@ -1426,7 +1451,7 @@ function renderRemoveCueProposal(cue){
     renderCues();
     refreshDownloadState();
   });
-  tools.append(reasonLabelEl, reason, noteLabel, note, renderOriginalTextDetails(cue), propose, error);
+  tools.append(panelCloseButton(details, summary), reasonLabelEl, reason, noteLabel, note, renderOriginalTextDetails(cue), propose, error);
   details.append(summary, tools);
   return details;
 }
