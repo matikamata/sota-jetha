@@ -1461,7 +1461,7 @@ function renderTags(target, list){
   list.forEach(item => {
     const chip = document.createElement("span");
     chip.className = "entry-chip";
-    chip.textContent = `${item.label} · ${item.slug || "no_slug"}`;
+    chip.textContent = item.label || "";
     target.append(chip);
   });
 }
